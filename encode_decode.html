@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Encoder/Decoder</title>
+  <!-- Embedded Bootstrap 5 CSS (Complete, Minified) -->
+  <style>
+    :root{--bs-blue:#0d6efd;--bs-indigo:#6610f2;--bs-purple:#6f42c1;--bs-pink:#d63384;--bs-red:#dc3545;--bs-orange:#fd7e14;--bs-yellow:#ffc107;--bs-green:#198754;--bs-teal:#20c997;--bs-cyan:#0dcaf0;--bs-white:#fff;--bs-gray:#6c757d;--bs-gray-dark:#343a40;--bs-primary:#6f42c1;--bs-secondary:#6c757d;--bs-success:#198754;--bs-info:#0dcaf0;--bs-warning:#ffc107;--bs-danger:#dc3545;--bs-light:#f8f9fa;--bs-dark:#212529;--bs-font-sans-serif:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans","Liberation Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";--bs-font-monospace:SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;--bs-gradient:linear-gradient(180deg,rgba(255,255,255,0.15),rgba(255,255,255,0))}*,*::before,*::after{box-sizing:border-box}body{margin:0;font-family:var(--bs-font-sans-serif);font-size:1rem;font-weight:400;line-height:1.5;color:#212529;background-color:#fff;-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:rgba(0,0,0,0)}.container,.container-fluid{max-width:1320px;padding-right:15px;padding-left:15px;margin-right:auto;margin-left:auto}h1{font-size:calc(1.375rem + 1.5vw);margin-top:0;margin-bottom:.5rem;font-weight:500;line-height:1.2}h2{font-size:calc(1.325rem + .9vw)}h3{font-size:calc(1.3rem + .6vw)}p{margin-top:0;margin-bottom:1rem}ul,ol{padding-left:2rem}ul{margin-top:0;margin-bottom:1rem}.nav{display:flex;flex-wrap:wrap;padding-left:0;margin-bottom:0;list-style:none}.nav-link{display:block;padding:.5rem 1rem;color:#6f42c1;text-decoration:none;transition:color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out}.nav-link:hover,.nav-link:focus{color:#5a32a3}.nav-tabs{border-bottom:1px solid #dee2e6}.nav-tabs .nav-link{margin-bottom:-1px;border:1px solid transparent;border-top-left-radius:.25rem;border-top-right-radius:.25rem}.nav-tabs .nav-link:hover,.nav-tabs .nav-link:focus{border-color:#e9ecef #e9ecef #dee2e6}.nav-tabs .nav-link.active,.nav-tabs .nav-item.show .nav-link{color:#495057;background-color:#fff;border-color:#dee2e6 #dee2e6 #fff}.tab-content>.tab-pane{display:none}.tab-content>.active{display:block}.form-control{display:block;width:100%;padding:.375rem .75rem;font-size:1rem;font-weight:400;line-height:1.5;color:#212529;background-color:#fff;background-clip:padding-box;border:1px solid #ced4da;border-radius:.25rem;transition:border-color .15s ease-in-out,box-shadow .15s ease-in-out}.form-control:focus{color:#212529;background-color:#fff;border-color:#a78bfa;outline:0;box-shadow:0 0 0 .25rem rgba(111,66,193,.25)}textarea.form-control{min-height:100px}.btn{display:inline-block;font-weight:400;line-height:1.5;color:#212529;text-align:center;text-decoration:none;vertical-align:middle;cursor:pointer;-webkit-user-select:none;-moz-user-select:none;user-select:none;background-color:transparent;border:1px solid transparent;padding:.375rem .75rem;font-size:1rem;border-radius:.25rem;transition:color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out}.btn-primary{color:#fff;background-color:#6f42c1;border-color:#6f42c1}.btn-primary:hover{color:#fff;background-color:#5a32a3;border-color:#5a32a3}.btn-outline-primary{color:#6f42c1;border-color:#6f42c1}.btn-outline-primary:hover{color:#fff;background-color:#6f42c1;border-color:#6f42c1}.btn-check:focus+.btn-primary,.btn-primary:focus{color:#fff;background-color:#5a32a3;border-color:#5a32a3;box-shadow:0 0 0 .25rem rgba(111,66,193,.25)}.mt-2{margin-top:.5rem!important}.mt-4{margin-top:1.5rem!important}.mb-3{margin-bottom:1rem!important}.fade{transition:opacity .15s linear}.fade:not(.show){opacity:0}.d-flex{display:flex}.justify-content-between{justify-content:space-between}@media (min-width:1200px){.container{max-width:1140px}h1{font-size:2.5rem}h2{font-size:2rem}h3{font-size:1.75rem}}
+  </style>
+  <!-- Custom CSS for Themes -->
+  <style>
+    body { transition: background-color 0.3s, color 0.3s; }
+    body.light-theme {
+      background-color: #f8f9fa;
+      color: #212529;
+    }
+    body.dark-theme {
+      background-color: #212529;
+      color: #f8f9fa;
+    }
+    .container { max-width: 800px; }
+    .nav-tabs {
+      background-color: #fff;
+      border-radius: .25rem;
+      margin-bottom: 1rem;
+    }
+    .dark-theme .nav-tabs {
+      background-color: #343a40;
+      border-bottom-color: #495057;
+    }
+    .nav-tabs .nav-link {
+      color: #6f42c1;
+      font-weight: 500;
+    }
+    .dark-theme .nav-tabs .nav-link {
+      color: #a78bfa;
+    }
+    .nav-tabs .nav-link:hover,
+    .nav-tabs .nav-link:focus {
+      color: #5a32a3;
+    }
+    .dark-theme .nav-tabs .nav-link:hover,
+    .dark-theme .nav-tabs .nav-link:focus {
+      color: #d1b3ff;
+    }
+    .nav-tabs .nav-link.active {
+      color: #495057;
+      background-color: #fff;
+      border-color: #dee2e6 #dee2e6 #fff;
+    }
+    .dark-theme .nav-tabs .nav-link.active {
+      color: #f8f9fa;
+      background-color: #343a40;
+      border-color: #495057 #495057 #343a40;
+    }
+    .tab-pane {
+      background-color: #fff;
+      border-radius: .25rem;
+      padding: 1.5rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .dark-theme .tab-pane {
+      background-color: #343a40;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    .btn-primary,
+    .btn-outline-primary {
+      transition: all 0.3s ease;
+    }
+    .dark-theme .btn-primary {
+      background-color: #6f42c1;
+      border-color: #6f42c1;
+    }
+    .dark-theme .btn-primary:hover {
+      background-color: #5a32a3;
+      border-color: #5a32a3;
+    }
+    .dark-theme .btn-outline-primary {
+      color: #a78bfa;
+      border-color: #a78bfa;
+    }
+    .dark-theme .btn-outline-primary:hover {
+      background-color: #6f42c1;
+      border-color: #6f42c1;
+      color: #fff;
+    }
+    .form-control {
+      resize: vertical;
+    }
+    .dark-theme .form-control {
+      background-color: #495057;
+      color: #f8f9fa;
+      border-color: #6c757d;
+    }
+    .dark-theme .form-control:focus {
+      background-color: #495057;
+      color: #f8f9fa;
+      border-color: #a78bfa;
+      box-shadow: 0 0 0 .25rem rgba(111,66,193,.25);
+    }
+    label {
+      font-weight: 500;
+    }
+    .dark-theme label {
+      color: #f8f9fa;
+    }
+    .copy-button {
+      margin-top: 0.5rem;
+    }
+    .language-switcher,
+    .theme-switcher {
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body class="dark-theme">
+  <div class="container mt-4">
+    <!-- Theme and Language Switchers -->
+    <div class="d-flex justify-content-between">
+      <div class="theme-switcher">
+        <button class="btn btn-outline-primary" id="themeToggle">Switch to Light Theme</button>
+      </div>
+      <div class="language-switcher">
+        <label for="languageSelect" class="form-label" id="languageLabel">Taal / Language:</label>
+        <select id="languageSelect" class="form-control" style="width: auto; display: inline-block;">
+          <option value="nl">Nederlands</option>
+          <option value="en">English</option>
+          <option value="es">Español</option>
+          <option value="fr">Français</option>
+          <option value="ru">Русский</option>
+          <option value="zh">中文</option>
+        </select>
+      </div>
+    </div>
+    <h1 id="pageTitle">Encoder/Decoder</h1>
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Uitleg</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="encode-tab" data-bs-toggle="tab" data-bs-target="#encode" type="button" role="tab" aria-controls="encode" aria-selected="false">Encoder</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="decode-tab" data-bs-toggle="tab" data-bs-target="#decode" type="button" role="tab" aria-controls="decode" aria-selected="false">Decoder</button>
+      </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+      <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+        <h2 id="homeTitle">Hoe werkt deze Encoder/Decoder?</h2>
+        <p id="homeIntro"></p>
+        <h3 id="whatDoesItDo">Wat doet het?</h3>
+        <p id="whatDoesItDoText"></p>
+        <h3 id="howToUseEncoder">Hoe gebruik je de Encoder (tweede tabblad)?</h3>
+        <ol id="encoderSteps"></ol>
+        <h3 id="howToUseDecoder">Hoe gebruik je de Decoder (derde tabblad)?</h3>
+        <ol id="decoderSteps"></ol>
+        <h3 id="whyKey">Waarom een sleutel?</h3>
+        <p id="whyKeyText"></p>
+        <h3 id="tips">Handige tips:</h3>
+        <ul id="tipsList"></ul>
+        <p id="enjoyText"></p>
+      </div>
+      <div class="tab-pane fade" id="encode" role="tabpanel" aria-labelledby="encode-tab">
+        <h2 id="encoderTitle">Encoder</h2>
+        <div class="mb-3">
+          <label for="encodeInput" class="form-label" id="encodeInputLabel">Bericht om te versleutelen</label>
+          <textarea class="form-control" id="encodeInput" rows="4" placeholder="Typ hier je bericht..."></textarea>
+        </div>
+        <div class="mb-3">
+          <label for="encodeKey" class="form-label" id="encodeKeyLabel">Geheime sleutel</label>
+          <textarea class="form-control" id="encodeKey" rows="2" placeholder="Typ hier je sleutel..."></textarea>
+          <input type="file" class="form-control mt-2" id="encodeKeyFile" accept=".txt">
+        </div>
+        <button class="btn btn-primary mb-3" onclick="encode()" id="encodeButton">Encode</button>
+        <div class="mb-3">
+          <label for="encodeOutput" class="form-label" id="encodeOutputLabel">Versleuteld bericht</label>
+          <textarea class="form-control" id="encodeOutput" rows="4" readonly></textarea>
+          <button class="btn btn-outline-primary copy-button" onclick="copyText('encodeOutput')" id="copyEncodeButton">Kopiëren</button>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="decode" role="tabpanel" aria-labelledby="decode-tab">
+        <h2 id="decoderTitle">Decoder</h2>
+        <div class="mb-3">
+          <label for="decodeInput" class="form-label" id="decodeInputLabel">Versleuteld bericht</label>
+          <textarea class="form-control" id="decodeInput" rows="4" placeholder="Plak hier het versleutelde bericht..."></textarea>
+        </div>
+        <div class="mb-3">
+          <label for="decodeKey" class="form-label" id="decodeKeyLabel">Geheime sleutel</label>
+          <textarea class="form-control" id="decodeKey" rows="2" placeholder="Typ hier je sleutel..."></textarea>
+          <input type="file" class="form-control mt-2" id="decodeKeyFile" accept=".txt">
+        </div>
+        <button class="btn btn-primary mb-3" onclick="decode()" id="decodeButton">Decode</button>
+        <div class="mb-3">
+          <label for="decodeOutput" class="form-label" id="decodeOutputLabel">Ontsleuteld bericht</label>
+          <textarea class="form-control" id="decodeOutput" rows="4" readonly></textarea>
+          <button class="btn btn-outline-primary copy-button" onclick="copyText('decodeOutput')" id="copyDecodeButton">Kopiëren</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Simplified Bootstrap Tab JavaScript -->
+  <script>
+    (function () {
+      'use strict';
+      const triggerTabList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tab"]'));
+      triggerTabList.forEach(function (triggerEl) {
+        if (!triggerEl) return;
+        triggerEl.addEventListener('click', function (event) {
+          event.preventDefault();
+          const targetSelector = triggerEl.getAttribute('data-bs-target');
+          if (!targetSelector) {
+            console.error('No data-bs-target attribute found on tab trigger:', triggerEl);
+            return;
+          }
+          const targetEl = document.querySelector(targetSelector);
+          if (!targetEl) {
+            console.error('Target element not found for selector:', targetSelector);
+            return;
+          }
+          const tabList = triggerEl.closest('.nav-tabs');
+          if (!tabList) {
+            console.error('No parent .nav-tabs found for trigger:', triggerEl);
+            return;
+          }
+          tabList.querySelectorAll('.nav-link.active').forEach(function (el) {
+            el.classList.remove('active');
+          });
+          tabList.closest('.container').querySelectorAll('.tab-pane.show.active').forEach(function (el) {
+            el.classList.remove('show', 'active');
+          });
+          triggerEl.classList.add('active');
+          targetEl.classList.add('show', 'active');
+        });
+      });
+    })();
+  </script>
+
+  <!-- Theme and Language Support, Encoder/Decoder JavaScript -->
+  <script>
+    // Language Translations
+    const translations = {
+      nl: {
+        switchToLight: "Schakel naar Licht Thema",
+        switchToDark: "Schakel naar Donker Thema",
+        languageLabel: "Taal:",
+        pageTitle: "Encoder/Decoder",
+        homeTab: "Uitleg",
+        encodeTab: "Encoder",
+        decodeTab: "Decoder",
+        homeTitle: "Hoe werkt deze Encoder/Decoder?",
+        homeIntro: "Met deze website kun je geheime berichten maken en lezen. Het is een eenvoudige manier om tekst te versleutelen (onleesbaar te maken) en te ontsleutelen (weer leesbaar te maken), zolang je een geheime sleutel hebt. Hier is een simpele uitleg:",
+        whatDoesItDo: "Wat doet het?",
+        whatDoesItDoText: "Je kunt een bericht typen en met een geheime sleutel (een andere tekst) het bericht versleutelen. Het versleutelde bericht ziet eruit als wartaal, maar iemand met dezelfde sleutel kan het weer leesbaar maken. Dit is handig om berichten te sturen die alleen mensen met de sleutel kunnen begrijpen.",
+        howToUseEncoder: "Hoe gebruik je de Encoder (tweede tabblad)?",
+        encoderSteps: [
+          "Voer je bericht in: Typ in het eerste veld het bericht dat je wilt versleutelen, bijvoorbeeld: <strong>Dit is een geheim bericht</strong>.",
+          "Kies een sleutel: Typ in het tweede veld een geheime sleutel, zoals <strong>mijnsleutel123</strong>. Je kunt ook een tekstbestand uploaden met een langere sleutel, bijvoorbeeld een stukje uit een boek. De sleutel wordt in tweeën gesplitst voor extra beveiliging.",
+          "Versleutel het bericht: Klik op de <strong>Encode</strong> knop. Het versleutelde bericht verschijnt in het derde veld. Dit bericht ziet er vreemd uit en kan alleen ontsleuteld worden met de geheim gedeelde string.",
+          "Kopieer het resultaat: Klik op de <strong>Kopiëren</strong> knop in het derde veld om het versleutelde bericht te kopiëren en te delen met iemand die de sleutel heeft."
+        ],
+        howToUseDecoder: "Hoe gebruik je de Decoder (derde tabblad)?",
+        decoderSteps: [
+          "Plak het versleutelde bericht: Plak het versleutelde bericht in het eerste veld van het Decoder-tabblad.",
+          "Voer dezelfde sleutel in: Typ of upload dezelfde sleutel die bij het encoderen is gebruikt in het tweede veld.",
+          "Ontsleutel het bericht: Klik op de <strong>Decode</strong> knop. Het originele bericht verschijnt in het derde veld, bijvoorbeeld: <strong>Dit is een geheim bericht</strong>.",
+          "Kopieer het resultaat: Gebruik de <strong>Kopiëren</strong> knop om het ontsleutelde bericht te kopiëren."
+        ],
+        whyKey: "Waarom een sleutel?",
+        whyKeyText: "De sleutel is als een wachtwoord. Alleen iemand die dezelfde sleutel heeft, kan het versleutelde bericht weer leesbaar maken. Zonder de sleutel is het bericht onleesbaar. Zorg ervoor dat je de sleutel veilig deelt met de persoon die het bericht moet lezen, bijvoorbeeld via een andere veilige manier zoals een privébericht.",
+        tips: "Handige tips:",
+        tipsList: [
+          "Gebruik een lange of unieke sleutel voor extra veiligheid.",
+          "Als je een tekstbestand gebruikt als sleutel, zorg ervoor dat beide personen hetzelfde bestand hebben.",
+          "Het versleutelde bericht kun je kopiëren en bijvoorbeeld via e-mail of chat sturen.",
+          "Als het decoderen niet werkt, controleer of je precies dezelfde sleutel gebruikt als bij het encoderen."
+        ],
+        enjoyText: "Veel plezier met het versturen van geheime berichten!",
+        encodeInputLabel: "Bericht om te versleutelen",
+        encodeKeyLabel: "Geheime sleutel",
+        encodeButton: "Encode",
+        encodeOutputLabel: "Versleuteld bericht",
+        copyEncodeButton: "Kopiëren",
+        decodeInputLabel: "Versleuteld bericht",
+        decodeKeyLabel: "Geheime sleutel",
+        decodeButton: "Decode",
+        decodeOutputLabel: "Ontsleuteld bericht",
+        copyDecodeButton: "Kopiëren",
+        encodeInputPlaceholder: "Typ hier je bericht...",
+        encodeKeyPlaceholder: "Typ hier je sleutel...",
+        decodeInputPlaceholder: "Plak hier het versleutelde bericht...",
+        decodeKeyPlaceholder: "Typ hier je sleutel...",
+        encodeAlert: "Vul zowel een bericht als een sleutel in!",
+        decodeAlert: "Vul zowel een versleuteld bericht als een sleutel in!",
+        decodeError: "Ongeldig versleuteld bericht of verkeerde sleutel!",
+        copyAlert: "Tekst gekopieerd!"
+      },
+      en: {
+        switchToLight: "Switch to Light Theme",
+        switchToDark: "Switch to Dark Theme",
+        languageLabel: "Language:",
+        pageTitle: "Encoder/Decoder",
+        homeTab: "Explanation",
+        encodeTab: "Encoder",
+        decodeTab: "Decoder",
+        homeTitle: "How does this Encoder/Decoder work?",
+        homeIntro: "This website allows you to create and read secret messages. It’s a simple way to encrypt text (make it unreadable) and decrypt it (make it readable again) as long as you have a secret key. Here’s a simple explanation:",
+        whatDoesItDo: "What does it do?",
+        whatDoesItDoText: "You can type a message and use a secret key (another piece of text) to encrypt it. The encrypted message looks like gibberish, but someone with the same key can make it readable again. This is useful for sending messages that only people with the key can understand.",
+        howToUseEncoder: "How to use the Encoder (second tab)?",
+        encoderSteps: [
+          "Enter your message: Type the message you want to encrypt in the first field, e.g., <strong>This is a secret message</strong>.",
+          "Choose a key: Type a secret key in the second field, such as <strong>mykey123</strong>. You can also upload a text file with a longer key, like a passage from a book. The key is split in two for added security.",
+          "Encrypt the message: Click the <strong>Encode</strong> button. The encrypted message appears in the third field. This message looks strange and can only be decrypted with the shared secret string.",
+          "Copy the result: Click the <strong>Copy</strong> button in the third field to copy the encrypted message and share it with someone who has the key."
+        ],
+        howToUseDecoder: "How to use the Decoder (third tab)?",
+        decoderSteps: [
+          "Paste the encrypted message: Paste the encrypted message into the first field of the Decoder tab.",
+          "Enter the same key: Type or upload the same key used for encryption in the second field.",
+          "Decrypt the message: Click the <strong>Decode</strong> button. The original message appears in the third field, e.g., <strong>This is a secret message</strong>.",
+          "Copy the result: Use the <strong>Copy</strong> button to copy the decrypted message."
+        ],
+        whyKey: "Why a key?",
+        whyKeyText: "The key is like a password. Only someone with the same key can make the encrypted message readable again. Without the key, the message is unreadable. Make sure to share the key securely with the person who needs to read the message, e.g., via a private message.",
+        tips: "Useful tips:",
+        tipsList: [
+          "Use a long or unique key for extra security.",
+          "If you use a text file as a key, ensure both parties have the same file.",
+          "You can copy the encrypted message and send it via email or chat.",
+          "If decoding doesn’t work, check that you’re using exactly the same key as for encoding."
+        ],
+        enjoyText: "Have fun sending secret messages!",
+        encodeInputLabel: "Message to encrypt",
+        encodeKeyLabel: "Secret key",
+        encodeButton: "Encode",
+        encodeOutputLabel: "Encrypted message",
+        copyEncodeButton: "Copy",
+        decodeInputLabel: "Encrypted message",
+        decodeKeyLabel: "Secret key",
+        decodeButton: "Decode",
+        decodeOutputLabel: "Decrypted message",
+        copyDecodeButton: "Copy",
+        encodeInputPlaceholder: "Type your message here...",
+        encodeKeyPlaceholder: "Type your key here...",
+        decodeInputPlaceholder: "Paste the encrypted message here...",
+        decodeKeyPlaceholder: "Type your key here...",
+        encodeAlert: "Please enter both a message and a key!",
+        decodeAlert: "Please enter both an encrypted message and a key!",
+        decodeError: "Invalid encrypted message or wrong key!",
+        copyAlert: "Text copied!"
+      },
+      es: {
+        switchToLight: "Cambiar a Tema Claro",
+        switchToDark: "Cambiar a Tema Oscuro",
+        languageLabel: "Idioma:",
+        pageTitle: "Codificador/Decodificador",
+        homeTab: "Explicación",
+        encodeTab: "Codificador",
+        decodeTab: "Decodificador",
+        homeTitle: "¿Cómo funciona este Codificador/Decodificador?",
+        homeIntro: "Este sitio web te permite crear y leer mensajes secretos. Es una forma sencilla de cifrar texto (hacerlo ilegible) y descifrarlo (hacerlo legible de nuevo) siempre que tengas una clave secreta. Aquí tienes una explicación simple:",
+        whatDoesItDo: "¿Qué hace?",
+        whatDoesItDoText: "Puedes escribir un mensaje y usar una clave secreta (otro texto) para cifrarlo. El mensaje cifrado parece un galimatías, pero alguien con la misma clave puede hacerlo legible nuevamente. Esto es útil para enviar mensajes que solo las personas con la clave pueden entender.",
+        howToUseEncoder: "¿Cómo usar el Codificador (segunda pestaña)?",
+        encoderSteps: [
+          "Ingresa tu mensaje: Escribe el mensaje que deseas cifrar en el primer campo, por ejemplo: <strong>Este es un mensaje secreto</strong>.",
+          "Elige una clave: Escribe una clave secreta en el segundo campo, como <strong>miclave123</strong>. También puedes cargar un archivo de texto con una clave más larga, como un pasaje de un libro. La clave se divide en dos para mayor seguridad.",
+          "Cifrar el mensaje: Haz clic en el botón <strong>Codificar</strong>. El mensaje cifrado aparece en el tercer campo. Este mensaje parece extraño y solo puede descifrarse con la cadena secreta compartida.",
+          "Copiar el resultado: Haz clic en el botón <strong>Copiar</strong> en el tercer campo para copiar el mensaje cifrado y compartirlo con alguien que tenga la clave."
+        ],
+        howToUseDecoder: "¿Cómo usar el Decodificador (tercera pestaña)?",
+        decoderSteps: [
+          "Pega el mensaje cifrado: Pega el mensaje cifrado en el primer campo de la pestaña Decodificador.",
+          "Ingresa la misma clave: Escribe o carga la misma clave utilizada para el cifrado en el segundo campo.",
+          "Descifrar el mensaje: Haz clic en el botón <strong>Decodificar</strong>. El mensaje original aparecerá en el tercer campo, por ejemplo: <strong>Este es un mensaje secreto</strong>.",
+          "Copiar el resultado: Usa el botón <strong>Copiar</strong> para copiar el mensaje descifrado."
+        ],
+        whyKey: "¿Por qué una clave?",
+        whyKeyText: "La clave es como una contraseña. Solo alguien con la misma clave puede hacer que el mensaje cifrado sea legible nuevamente. Sin la clave, el mensaje es ilegible. Asegúrate de compartir la clave de forma segura con la persona que necesita leer el mensaje, por ejemplo, a través de un mensaje privado.",
+        tips: "Consejos útiles:",
+        tipsList: [
+          "Usa una clave larga o única para mayor seguridad.",
+          "Si usas un archivo de texto como clave, asegúrate de que ambas partes tengan el mismo archivo.",
+          "Puedes copiar el mensaje cifrado y enviarlo por correo electrónico o chat.",
+          "Si el descifrado no funciona, verifica que estés usando exactamente la misma clave que para el cifrado."
+        ],
+        enjoyText: "¡Diviértete enviando mensajes secretos!",
+        encodeInputLabel: "Mensaje para cifrar",
+        encodeKeyLabel: "Clave secreta",
+        encodeButton: "Codificar",
+        encodeOutputLabel: "Mensaje cifrado",
+        copyEncodeButton: "Copiar",
+        decodeInputLabel: "Mensaje cifrado",
+        decodeKeyLabel: "Clave secreta",
+        decodeButton: "Decodificar",
+        decodeOutputLabel: "Mensaje descifrado",
+        copyDecodeButton: "Copiar",
+        encodeInputPlaceholder: "Escribe tu mensaje aquí...",
+        encodeKeyPlaceholder: "Escribe tu clave aquí...",
+        decodeInputPlaceholder: "Pega el mensaje cifrado aquí...",
+        decodeKeyPlaceholder: "Escribe tu clave aquí...",
+        encodeAlert: "¡Por favor, introduce tanto un mensaje como una clave!",
+        decodeAlert: "¡Por favor, introduce tanto un mensaje cifrado como una clave!",
+        decodeError: "¡Mensaje cifrado inválido o clave incorrecta!",
+        copyAlert: "¡Texto copiado!"
+      },
+      fr: {
+        switchToLight: "Passer au thème clair",
+        switchToDark: "Passer au thème sombre",
+        languageLabel: "Langue :",
+        pageTitle: "Encodeur/Décodeur",
+        homeTab: "Explication",
+        encodeTab: "Encodeur",
+        decodeTab: "Décodeur",
+        homeTitle: "Comment fonctionne cet Encodeur/Décodeur ?",
+        homeIntro: "Ce site web vous permet de créer et de lire des messages secrets. C'est une manière simple de chiffrer un texte (le rendre illisible) et de le déchiffrer (le rendre lisible à nouveau) à condition d'avoir une clé secrète. Voici une explication simple :",
+        whatDoesItDo: "Que fait-il ?",
+        whatDoesItDoText: "Vous pouvez taper un message et utiliser une clé secrète (un autre texte) pour le chiffrer. Le message chiffré ressemble à du charabia, mais quelqu'un avec la même clé peut le rendre lisible à nouveau. C'est utile pour envoyer des messages que seules les personnes possédant la clé peuvent comprendre.",
+        howToUseEncoder: "Comment utiliser l'Encodeur (deuxième onglet) ?",
+        encoderSteps: [
+          "Entrez votre message : Tapez le message que vous souhaitez chiffrer dans le premier champ, par exemple : <strong>Ceci est un message secret</strong>.",
+          "Choisissez une clé : Tapez une clé secrète dans le deuxième champ, comme <strong>maclé123</strong>. Vous pouvez également télécharger un fichier texte avec une clé plus longue, comme un passage d'un livre. La clé est divisée en deux pour plus de sécurité.",
+          "Chiffrer le message : Cliquez sur le bouton <strong>Encoder</strong>. Le message chiffré apparaît dans le troisième champ. Ce message semble étrange et ne peut être déchiffré qu'avec la chaîne secrète partagée.",
+          "Copier le résultat : Cliquez sur le bouton <strong>Copier</strong> dans le troisième champ pour copier le message chiffré et le partager avec quelqu'un qui a la clé."
+        ],
+        howToUseDecoder: "Comment utiliser le Décodeur (troisième onglet) ?",
+        decoderSteps: [
+          "Coller le message chiffré : Collez le message chiffré dans le premier champ de l'onglet Décodeur.",
+          "Entrez la même clé : Tapez ou téléchargez la même clé utilisée pour le chiffrement dans le deuxième champ.",
+          "Déchiffrer le message : Cliquez sur le bouton <strong>Décoder</strong>. Le message original apparaît dans le troisième champ, par exemple : <strong>Ceci est un message secret</strong>.",
+          "Copier le résultat : Utilisez le bouton <strong>Copier</strong> pour copier le message déchiffré."
+        ],
+        whyKey: "Pourquoi une clé ?",
+        whyKeyText: "La clé est comme un mot de passe. Seule une personne ayant la même clé peut rendre le message chiffré lisible à nouveau. Sans la clé, le message est illisible. Assurez-vous de partager la clé de manière sécurisée avec la personne qui doit lire le message, par exemple via un message privé.",
+        tips: "Conseils utiles :",
+        tipsList: [
+          "Utilisez une clé longue ou unique pour plus de sécurité.",
+          "Si vous utilisez un fichier texte comme clé, assurez-vous que les deux parties ont le même fichier.",
+          "Vous pouvez copier le message chiffré et l'envoyer par e-mail ou chat.",
+          "Si le déchiffrement ne fonctionne pas, vérifiez que vous utilisez exactement la même clé que pour le chiffrement."
+        ],
+        enjoyText: "Amusez-vous à envoyer des messages secrets !",
+        encodeInputLabel: "Message à chiffrer",
+        encodeKeyLabel: "Clé secrète",
+        encodeButton: "Encoder",
+        encodeOutputLabel: "Message chiffré",
+        copyEncodeButton: "Copier",
+        decodeInputLabel: "Message chiffré",
+        decodeKeyLabel: "Clé secrète",
+        decodeButton: "Décoder",
+        decodeOutputLabel: "Message déchiffré",
+        copyDecodeButton: "Copier",
+        encodeInputPlaceholder: "Tapez votre message ici...",
+        encodeKeyPlaceholder: "Tapez votre clé ici...",
+        decodeInputPlaceholder: "Collez le message chiffré ici...",
+        decodeKeyPlaceholder: "Tapez votre clé ici...",
+        encodeAlert: "Veuillez entrer à la fois un message et une clé !",
+        decodeAlert: "Veuillez entrer à la fois un message chiffré et une clé !",
+        decodeError: "Message chiffré invalide ou clé incorrecte !",
+        copyAlert: "Texte copié !"
+      },
+      ru: {
+        switchToLight: "Переключиться на светлую тему",
+        switchToDark: "Переключиться на темную тему",
+        languageLabel: "Язык:",
+        pageTitle: "Кодировщик/Декодировщик",
+        homeTab: "Объяснение",
+        encodeTab: "Кодировщик",
+        decodeTab: "Декодировщик",
+        homeTitle: "Как работает этот Кодировщик/Декодировщик?",
+        homeIntro: "Этот веб-сайт позволяет создавать и читать секретные сообщения. Это простой способ зашифровать текст (сделать его нечитаемым) и расшифровать его (сделать читаемым снова), если у вас есть секретный ключ. Вот простое объяснение:",
+        whatDoesItDo: "Что он делает?",
+        whatDoesItDoText: "Вы можете ввести сообщение и использовать секретный ключ (другой текст) для его шифрования. Зашифрованное сообщение выглядит как бессмыслица, но кто-то с таким же ключом может сделать его читаемым снова. Это полезно для отправки сообщений, которые могут понять только люди с ключом.",
+        howToUseEncoder: "Как использовать Кодировщик (вторая вкладка)?",
+        encoderSteps: [
+          "Введите ваше сообщение: Введите сообщение, которое вы хотите зашифровать, в первое поле, например: <strong>Это секретное сообщение</strong>.",
+          "Выберите ключ: Введите секретный ключ во второе поле, например, <strong>мойключ123</strong>. Вы также можете загрузить текстовый файл с более длинным ключом, например, отрывок из книги. Ключ делится на две части для дополнительной безопасности.",
+          "Зашифруйте сообщение: Нажмите кнопку <strong>Кодировать</strong>. Зашифрованное сообщение появится в третьем поле. Это сообщение выглядит странно и может быть расшифровано только с помощью общей секретной строки.",
+          "Скопируйте результат: Нажмите кнопку <strong>Копировать</strong> в третьем поле, чтобы скопировать зашифрованное сообщение и поделиться им с тем, у кого есть ключ."
+        ],
+        howToUseDecoder: "Как использовать Декодировщик (третья вкладка)?",
+        decoderSteps: [
+          "Вставьте зашифрованное сообщение: Вставьте зашифрованное сообщение в первое поле вкладки Декодировщик.",
+          "Введите тот же ключ: Введите или загрузите тот же ключ, который использовался для шифрования, во второе поле.",
+          "Расшифруйте сообщение: Нажмите кнопку <strong>Декодировать</strong>. Исходное сообщение появится в третьем поле, например: <strong>Это секретное сообщение</strong>.",
+          "Скопируйте результат: Используйте кнопку <strong>Копировать</strong>, чтобы скопировать расшифрованное сообщение."
+        ],
+        whyKey: "Зачем нужен ключ?",
+        whyKeyText: "Ключ — это как пароль. Только тот, у кого есть такой же ключ, может сделать зашифрованное сообщение читаемым снова. Без ключа сообщение нечитаемо. Убедитесь, что вы безопасно делитесь ключом с человеком, который должен прочитать сообщение, например, через личное сообщение.",
+        tips: "Полезные советы:",
+        tipsList: [
+          "Используйте длинный или уникальный ключ для дополнительной безопасности.",
+          "Если вы используете текстовый файл в качестве ключа, убедитесь, что у обеих сторон есть одинаковый файл.",
+          "Вы можете скопировать зашифрованное сообщение и отправить его по электронной почте или в чате.",
+          "Если декодирование не работает, проверьте, используете ли вы точно такой же ключ, как для шифрования."
+        ],
+        enjoyText: "Наслаждайтесь отправкой секретных сообщений!",
+        encodeInputLabel: "Сообщение для шифрования",
+        encodeKeyLabel: "Секретный ключ",
+        encodeButton: "Кодировать",
+        encodeOutputLabel: "Зашифрованное сообщение",
+        copyEncodeButton: "Копировать",
+        decodeInputLabel: "Зашифрованное сообщение",
+        decodeKeyLabel: "Секретный ключ",
+        decodeButton: "Декодировать",
+        decodeOutputLabel: "Расшифрованное сообщение",
+        copyDecodeButton: "Копировать",
+        encodeInputPlaceholder: "Введите ваше сообщение здесь...",
+        encodeKeyPlaceholder: "Введите ваш ключ здесь...",
+        decodeInputPlaceholder: "Вставьте зашифрованное сообщение здесь...",
+        decodeKeyPlaceholder: "Введите ваш ключ здесь...",
+        encodeAlert: "Пожалуйста, введите и сообщение, и ключ!",
+        decodeAlert: "Пожалуйста, введите и зашифрованное сообщение, и ключ!",
+        decodeError: "Недействительное зашифрованное сообщение или неверный ключ!",
+        copyAlert: "Текст скопирован!"
+      },
+      zh: {
+        switchToLight: "切换到浅色主题",
+        switchToDark: "切换到深色主题",
+        languageLabel: "语言：",
+        pageTitle: "加密/解密",
+        homeTab: "说明",
+        encodeTab: "加密器",
+        decodeTab: "解密器",
+        homeTitle: "这个加密/解密器如何工作？",
+        homeIntro: "这个网站允许你创建和阅读秘密消息。它是一种简单的方法，可以加密文本（使其不可读）并解密（使其再次可读），只要你有一个秘密密钥。以下是一个简单的解释：",
+        whatDoesItDo: "它做什么？",
+        whatDoesItDoText: "你可以输入一条消息，并使用一个秘密密钥（另一个文本）来加密它。加密后的消息看起来像乱码，但拥有相同密钥的人可以再次使其可读。这对于发送只有拥有密钥的人才能理解的消息非常有用。",
+        howToUseEncoder: "如何使用加密器（第二个标签）？",
+        encoderSteps: [
+          "输入你的消息：在第一个字段中输入你想加密的消息，例如：<strong>这是一个秘密消息</strong>。",
+          "选择一个密钥：在第二个字段中输入一个秘密密钥，如<strong>mykey123</strong>。你也可以上传一个包含更长密钥的文本文件，例如一本书的片段。密钥会被分成两部分以增加安全性。",
+          "加密消息：点击<strong>加密</strong>按钮。加密后的消息将出现在第三个字段中。这个消息看起来很奇怪，只能使用共享的秘密字符串解密。",
+          "复制结果：点击第三个字段中的<strong>复制</strong>按钮，以复制加密后的消息并与拥有密钥的人分享。"
+        ],
+        howToUseDecoder: "如何使用解密器（第三个标签）？",
+        decoderSteps: [
+          "粘贴加密消息：将加密消息粘贴到解密器标签的第一个字段中。",
+          "输入相同的密钥：在第二个字段中输入或上传用于加密的相同密钥。",
+          "解密消息：点击<strong>解密</strong>按钮。原始消息将出现在第三个字段中，例如：<strong>这是一个秘密消息</strong>。",
+          "复制结果：使用<strong>复制</strong>按钮复制解密后的消息。"
+        ],
+        whyKey: "为什么需要密钥？",
+        whyKeyText: "密钥就像一个密码。只有拥有相同密钥的人才能使加密消息再次可读。没有密钥，消息是不可读的。确保以安全的方式与需要阅读消息的人分享密钥，例如通过私人消息。",
+        tips: "实用提示：",
+        tipsList: [
+          "使用长或独特的密钥以增加安全性。",
+          "如果使用文本文件作为密钥，确保双方拥有相同的文件。",
+          "你可以复制加密消息并通过电子邮件或聊天发送。",
+          "如果解密失败，请检查是否使用了与加密时完全相同的密钥。"
+        ],
+        enjoyText: "享受发送秘密消息的乐趣！",
+        encodeInputLabel: "要加密的消息",
+        encodeKeyLabel: "秘密密钥",
+        encodeButton: "加密",
+        encodeOutputLabel: "加密消息",
+        copyEncodeButton: "复制",
+        decodeInputLabel: "加密消息",
+        decodeKeyLabel: "秘密密钥",
+        decodeButton: "解密",
+        decodeOutputLabel: "解密消息",
+        copyDecodeButton: "复制",
+        encodeInputPlaceholder: "在这里输入你的消息...",
+        encodeKeyPlaceholder: "在这里输入你的密钥...",
+        decodeInputPlaceholder: "在这里粘贴加密消息...",
+        decodeKeyPlaceholder: "在这里输入你的密钥...",
+        encodeAlert: "请同时输入消息和密钥！",
+        decodeAlert: "请同时输入加密消息和密钥！",
+        decodeError: "无效的加密消息或错误的密钥！",
+        copyAlert: "文本已复制！"
+      }
+    };
+
+    // Theme Toggle
+    const themeToggle = document.getElementById('themeToggle');
+    function setTheme(theme) {
+      document.body.className = theme + '-theme';
+      themeToggle.textContent = theme === 'dark' ? 
+        translations[document.getElementById('languageSelect').value].switchToLight : 
+        translations[document.getElementById('languageSelect').value].switchToDark;
+      localStorage.setItem('theme', theme);
+    }
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = document.body.classList.contains('dark-theme') ? 'dark' : 'light';
+      setTheme(currentTheme === 'dark' ? 'light' : 'dark');
+    });
+    // Initialize theme (default to dark)
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    setTheme(savedTheme);
+
+    // Language Detection and Update
+    function updateLanguage(lang) {
+      document.documentElement.lang = lang;
+      document.getElementById('languageLabel').textContent = translations[lang].languageLabel;
+      document.getElementById('pageTitle').textContent = translations[lang].pageTitle;
+      document.getElementById('home-tab').textContent = translations[lang].homeTab;
+      document.getElementById('encode-tab').textContent = translations[lang].encodeTab;
+      document.getElementById('decode-tab').textContent = translations[lang].decodeTab;
+      document.getElementById('homeTitle').textContent = translations[lang].homeTitle;
+      document.getElementById('homeIntro').textContent = translations[lang].homeIntro;
+      document.getElementById('whatDoesItDo').textContent = translations[lang].whatDoesItDo;
+      document.getElementById('whatDoesItDoText').textContent = translations[lang].whatDoesItDoText;
+      document.getElementById('howToUseEncoder').textContent = translations[lang].howToUseEncoder;
+      document.getElementById('howToUseDecoder').textContent = translations[lang].howToUseDecoder;
+      document.getElementById('whyKey').textContent = translations[lang].whyKey;
+      document.getElementById('whyKeyText').textContent = translations[lang].whyKeyText;
+      document.getElementById('tips').textContent = translations[lang].tips;
+      document.getElementById('enjoyText').textContent = translations[lang].enjoyText;
+      document.getElementById('encodeInputLabel').textContent = translations[lang].encodeInputLabel;
+      document.getElementById('encodeKeyLabel').textContent = translations[lang].encodeKeyLabel;
+      document.getElementById('encodeButton').textContent = translations[lang].encodeButton;
+      document.getElementById('encodeOutputLabel').textContent = translations[lang].encodeOutputLabel;
+      document.getElementById('copyEncodeButton').textContent = translations[lang].copyEncodeButton;
+      document.getElementById('decodeInputLabel').textContent = translations[lang].decodeInputLabel;
+      document.getElementById('decodeKeyLabel').textContent = translations[lang].decodeKeyLabel;
+      document.getElementById('decodeButton').textContent = translations[lang].decodeButton;
+      document.getElementById('decodeOutputLabel').textContent = translations[lang].decodeOutputLabel;
+      document.getElementById('copyDecodeButton').textContent = translations[lang].copyDecodeButton;
+      document.getElementById('encodeInput').placeholder = translations[lang].encodeInputPlaceholder;
+      document.getElementById('encodeKey').placeholder = translations[lang].encodeKeyPlaceholder;
+      document.getElementById('decodeInput').placeholder = translations[lang].decodeInputPlaceholder;
+      document.getElementById('decodeKey').placeholder = translations[lang].decodeKeyPlaceholder;
+      themeToggle.textContent = document.body.classList.contains('dark-theme') ? 
+        translations[lang].switchToLight : translations[lang].switchToDark;
+
+      // Update lists
+      const encoderSteps = document.getElementById('encoderSteps');
+      encoderSteps.innerHTML = '';
+      translations[lang].encoderSteps.forEach(step => {
+        const li = document.createElement('li');
+        li.innerHTML = step;
+        encoderSteps.appendChild(li);
+      });
+      const decoderSteps = document.getElementById('decoderSteps');
+      decoderSteps.innerHTML = '';
+      translations[lang].decoderSteps.forEach(step => {
+        const li = document.createElement('li');
+        li.innerHTML = step;
+        decoderSteps.appendChild(li);
+      });
+      const tipsList = document.getElementById('tipsList');
+      tipsList.innerHTML = '';
+      translations[lang].tipsList.forEach(tip => {
+        const li = document.createElement('li');
+        li.textContent = tip;
+        tipsList.appendChild(li);
+      });
+    }
+
+    // Browser Language Detection
+    const supportedLanguages = ['nl', 'en', 'es', 'fr', 'ru', 'zh'];
+    let browserLang = (navigator.language || navigator.languages[0]).split('-')[0];
+    const selectedLang = supportedLanguages.includes(browserLang) ? browserLang : 'nl';
+    document.getElementById('languageSelect').value = selectedLang;
+    updateLanguage(selectedLang);
+
+    // Language Switcher
+    document.getElementById('languageSelect').addEventListener('change', function() {
+      updateLanguage(this.value);
+    });
+
+    // Encoder/Decoder Functions
+    function encode() {
+      const input = document.getElementById('encodeInput').value;
+      const key = document.getElementById('encodeKey').value;
+      const output = document.getElementById('encodeOutput');
+      if (!input || !key) {
+        alert(translations[document.getElementById('languageSelect').value].encodeAlert);
+        return;
+      }
+      const encoded = btoa(input.split('').map((c, i) => 
+        String.fromCharCode(c.charCodeAt(0) ^ key.charCodeAt(i % key.length))).join(''));
+      output.value = encoded;
+    }
+
+    function decode() {
+      const input = document.getElementById('decodeInput').value;
+      const key = document.getElementById('decodeKey').value;
+      const output = document.getElementById('decodeOutput');
+      if (!input || !key) {
+        alert(translations[document.getElementById('languageSelect').value].decodeAlert);
+        return;
+      }
+      try {
+        const decoded = atob(input).split('').map((c, i) => 
+          String.fromCharCode(c.charCodeAt(0) ^ key.charCodeAt(i % key.length))).join('');
+        output.value = decoded;
+      } catch (e) {
+        alert(translations[document.getElementById('languageSelect').value].decodeError);
+      }
+    }
+
+    function copyText(elementId) {
+      const textarea = document.getElementById(elementId);
+      textarea.select();
+      document.execCommand('copy');
+      alert(translations[document.getElementById('languageSelect').value].copyAlert);
+    }
+
+    document.getElementById('encodeKeyFile').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('encodeKey').value = e.target.result;
+        };
+        reader.readAsText(file);
+      }
+    });
+
+    document.getElementById('decodeKeyFile').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('decodeKey').value = e.target.result;
+        };
+        reader.readAsText(file);
+      }
+    });
+  </script>
+</body>
+</html>
