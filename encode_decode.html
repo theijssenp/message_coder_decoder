@@ -1,119 +1,409 @@
 <!DOCTYPE html>
 <html lang="nl">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Encoder/Decoder</title>
   <!-- Embedded Bootstrap 5 CSS (Complete, Minified) -->
   <style>
-    :root{--bs-blue:#0d6efd;--bs-indigo:#6610f2;--bs-purple:#6f42c1;--bs-pink:#d63384;--bs-red:#dc3545;--bs-orange:#fd7e14;--bs-yellow:#ffc107;--bs-green:#198754;--bs-teal:#20c997;--bs-cyan:#0dcaf0;--bs-white:#fff;--bs-gray:#6c757d;--bs-gray-dark:#343a40;--bs-primary:#6f42c1;--bs-secondary:#6c757d;--bs-success:#198754;--bs-info:#0dcaf0;--bs-warning:#ffc107;--bs-danger:#dc3545;--bs-light:#f8f9fa;--bs-dark:#212529;--bs-font-sans-serif:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans","Liberation Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";--bs-font-monospace:SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;--bs-gradient:linear-gradient(180deg,rgba(255,255,255,0.15),rgba(255,255,255,0))}*,*::before,*::after{box-sizing:border-box}body{margin:0;font-family:var(--bs-font-sans-serif);font-size:1rem;font-weight:400;line-height:1.5;color:#212529;background-color:#fff;-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:rgba(0,0,0,0)}.container,.container-fluid{max-width:1320px;padding-right:15px;padding-left:15px;margin-right:auto;margin-left:auto}h1{font-size:calc(1.375rem + 1.5vw);margin-top:0;margin-bottom:.5rem;font-weight:500;line-height:1.2}h2{font-size:calc(1.325rem + .9vw)}h3{font-size:calc(1.3rem + .6vw)}p{margin-top:0;margin-bottom:1rem}ul,ol{padding-left:2rem}ul{margin-top:0;margin-bottom:1rem}.nav{display:flex;flex-wrap:wrap;padding-left:0;margin-bottom:0;list-style:none}.nav-link{display:block;padding:.5rem 1rem;color:#6f42c1;text-decoration:none;transition:color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out}.nav-link:hover,.nav-link:focus{color:#5a32a3}.nav-tabs{border-bottom:1px solid #dee2e6}.nav-tabs .nav-link{margin-bottom:-1px;border:1px solid transparent;border-top-left-radius:.25rem;border-top-right-radius:.25rem}.nav-tabs .nav-link:hover,.nav-tabs .nav-link:focus{border-color:#e9ecef #e9ecef #dee2e6}.nav-tabs .nav-link.active,.nav-tabs .nav-item.show .nav-link{color:#495057;background-color:#fff;border-color:#dee2e6 #dee2e6 #fff}.tab-content>.tab-pane{display:none}.tab-content>.active{display:block}.form-control{display:block;width:100%;padding:.375rem .75rem;font-size:1rem;font-weight:400;line-height:1.5;color:#212529;background-color:#fff;background-clip:padding-box;border:1px solid #ced4da;border-radius:.25rem;transition:border-color .15s ease-in-out,box-shadow .15s ease-in-out}.form-control:focus{color:#212529;background-color:#fff;border-color:#a78bfa;outline:0;box-shadow:0 0 0 .25rem rgba(111,66,193,.25)}textarea.form-control{min-height:100px}.btn{display:inline-block;font-weight:400;line-height:1.5;color:#212529;text-align:center;text-decoration:none;vertical-align:middle;cursor:pointer;-webkit-user-select:none;-moz-user-select:none;user-select:none;background-color:transparent;border:1px solid transparent;padding:.375rem .75rem;font-size:1rem;border-radius:.25rem;transition:color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out}.btn-primary{color:#fff;background-color:#6f42c1;border-color:#6f42c1}.btn-primary:hover{color:#fff;background-color:#5a32a3;border-color:#5a32a3}.btn-outline-primary{color:#6f42c1;border-color:#6f42c1}.btn-outline-primary:hover{color:#fff;background-color:#6f42c1;border-color:#6f42c1}.btn-check:focus+.btn-primary,.btn-primary:focus{color:#fff;background-color:#5a32a3;border-color:#5a32a3;box-shadow:0 0 0 .25rem rgba(111,66,193,.25)}.mt-2{margin-top:.5rem!important}.mt-4{margin-top:1.5rem!important}.mb-3{margin-bottom:1rem!important}.fade{transition:opacity .15s linear}.fade:not(.show){opacity:0}.d-flex{display:flex}.justify-content-between{justify-content:space-between}@media (min-width:1200px){.container{max-width:1140px}h1{font-size:2.5rem}h2{font-size:2rem}h3{font-size:1.75rem}}
+    :root {
+      --bs-blue: #0d6efd;
+      --bs-indigo: #6610f2;
+      --bs-purple: #6f42c1;
+      --bs-pink: #d63384;
+      --bs-red: #dc3545;
+      --bs-orange: #fd7e14;
+      --bs-yellow: #ffc107;
+      --bs-green: #198754;
+      --bs-teal: #20c997;
+      --bs-cyan: #0dcaf0;
+      --bs-white: #fff;
+      --bs-gray: #6c757d;
+      --bs-gray-dark: #343a40;
+      --bs-primary: #6f42c1;
+      --bs-secondary: #6c757d;
+      --bs-success: #198754;
+      --bs-info: #0dcaf0;
+      --bs-warning: #ffc107;
+      --bs-danger: #dc3545;
+      --bs-light: #f8f9fa;
+      --bs-dark: #212529;
+      --bs-font-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+      --bs-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --bs-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0))
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--bs-font-sans-serif);
+      font-size: 1rem;
+      font-weight: 400;
+      line-height: 1.5;
+      color: #212529;
+      background-color: #fff;
+      -webkit-text-size-adjust: 100%;
+      -webkit-tap-highlight-color: rgba(0, 0, 0, 0)
+    }
+
+    .container,
+    .container-fluid {
+      max-width: 1320px;
+      padding-right: 15px;
+      padding-left: 15px;
+      margin-right: auto;
+      margin-left: auto
+    }
+
+    h1 {
+      font-size: calc(1.375rem + 1.5vw);
+      margin-top: 0;
+      margin-bottom: .5rem;
+      font-weight: 500;
+      line-height: 1.2
+    }
+
+    h2 {
+      font-size: calc(1.325rem + .9vw)
+    }
+
+    h3 {
+      font-size: calc(1.3rem + .6vw)
+    }
+
+    p {
+      margin-top: 0;
+      margin-bottom: 1rem
+    }
+
+    ul,
+    ol {
+      padding-left: 2rem
+    }
+
+    ul {
+      margin-top: 0;
+      margin-bottom: 1rem
+    }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      padding-left: 0;
+      margin-bottom: 0;
+      list-style: none
+    }
+
+    .nav-link {
+      display: block;
+      padding: .5rem 1rem;
+      color: #6f42c1;
+      text-decoration: none;
+      transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out
+    }
+
+    .nav-link:hover,
+    .nav-link:focus {
+      color: #5a32a3
+    }
+
+    .nav-tabs {
+      border-bottom: 1px solid #dee2e6
+    }
+
+    .nav-tabs .nav-link {
+      margin-bottom: -1px;
+      border: 1px solid transparent;
+      border-top-left-radius: .25rem;
+      border-top-right-radius: .25rem
+    }
+
+    .nav-tabs .nav-link:hover,
+    .nav-tabs .nav-link:focus {
+      border-color: #e9ecef #e9ecef #dee2e6
+    }
+
+    .nav-tabs .nav-link.active,
+    .nav-tabs .nav-item.show .nav-link {
+      color: #495057;
+      background-color: #fff;
+      border-color: #dee2e6 #dee2e6 #fff
+    }
+
+    .tab-content>.tab-pane {
+      display: none
+    }
+
+    .tab-content>.active {
+      display: block
+    }
+
+    .form-control {
+      display: block;
+      width: 100%;
+      padding: .375rem .75rem;
+      font-size: 1rem;
+      font-weight: 400;
+      line-height: 1.5;
+      color: #212529;
+      background-color: #fff;
+      background-clip: padding-box;
+      border: 1px solid #ced4da;
+      border-radius: .25rem;
+      transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out
+    }
+
+    .form-control:focus {
+      color: #212529;
+      background-color: #fff;
+      border-color: #a78bfa;
+      outline: 0;
+      box-shadow: 0 0 0 .25rem rgba(111, 66, 193, .25)
+    }
+
+    textarea.form-control {
+      min-height: 100px
+    }
+
+    .btn {
+      display: inline-block;
+      font-weight: 400;
+      line-height: 1.5;
+      color: #212529;
+      text-align: center;
+      text-decoration: none;
+      vertical-align: middle;
+      cursor: pointer;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      user-select: none;
+      background-color: transparent;
+      border: 1px solid transparent;
+      padding: .375rem .75rem;
+      font-size: 1rem;
+      border-radius: .25rem;
+      transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out
+    }
+
+    .btn-primary {
+      color: #fff;
+      background-color: #6f42c1;
+      border-color: #6f42c1
+    }
+
+    .btn-primary:hover {
+      color: #fff;
+      background-color: #5a32a3;
+      border-color: #5a32a3
+    }
+
+    .btn-outline-primary {
+      color: #6f42c1;
+      border-color: #6f42c1
+    }
+
+    .btn-outline-primary:hover {
+      color: #fff;
+      background-color: #6f42c1;
+      border-color: #6f42c1
+    }
+
+    .btn-check:focus+.btn-primary,
+    .btn-primary:focus {
+      color: #fff;
+      background-color: #5a32a3;
+      border-color: #5a32a3;
+      box-shadow: 0 0 0 .25rem rgba(111, 66, 193, .25)
+    }
+
+    .mt-2 {
+      margin-top: .5rem !important
+    }
+
+    .mt-4 {
+      margin-top: 1.5rem !important
+    }
+
+    .mb-3 {
+      margin-bottom: 1rem !important
+    }
+
+    .fade {
+      transition: opacity .15s linear
+    }
+
+    .fade:not(.show) {
+      opacity: 0
+    }
+
+    .d-flex {
+      display: flex
+    }
+
+    .justify-content-between {
+      justify-content: space-between
+    }
+
+    @media (min-width:1200px) {
+      .container {
+        max-width: 1140px
+      }
+
+      h1 {
+        font-size: 2.5rem
+      }
+
+      h2 {
+        font-size: 2rem
+      }
+
+      h3 {
+        font-size: 1.75rem
+      }
+    }
   </style>
   <!-- Custom CSS for Themes -->
   <style>
-    body { transition: background-color 0.3s, color 0.3s; }
+    body {
+      transition: background-color 0.3s, color 0.3s;
+    }
+
     body.light-theme {
       background-color: #f8f9fa;
       color: #212529;
     }
+
     body.dark-theme {
       background-color: #212529;
       color: #f8f9fa;
     }
-    .container { max-width: 800px; }
+
+    .container {
+      max-width: 800px;
+    }
+
     .nav-tabs {
       background-color: #fff;
       border-radius: .25rem;
       margin-bottom: 1rem;
     }
+
     .dark-theme .nav-tabs {
       background-color: #343a40;
       border-bottom-color: #495057;
     }
+
     .nav-tabs .nav-link {
       color: #6f42c1;
       font-weight: 500;
     }
+
     .dark-theme .nav-tabs .nav-link {
       color: #a78bfa;
     }
+
     .nav-tabs .nav-link:hover,
     .nav-tabs .nav-link:focus {
       color: #5a32a3;
     }
+
     .dark-theme .nav-tabs .nav-link:hover,
     .dark-theme .nav-tabs .nav-link:focus {
       color: #d1b3ff;
     }
+
     .nav-tabs .nav-link.active {
       color: #495057;
       background-color: #fff;
       border-color: #dee2e6 #dee2e6 #fff;
     }
+
     .dark-theme .nav-tabs .nav-link.active {
       color: #f8f9fa;
       background-color: #343a40;
       border-color: #495057 #495057 #343a40;
     }
+
     .tab-pane {
       background-color: #fff;
       border-radius: .25rem;
       padding: 1.5rem;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
+
     .dark-theme .tab-pane {
       background-color: #343a40;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     }
+
     .btn-primary,
     .btn-outline-primary {
       transition: all 0.3s ease;
     }
+
     .dark-theme .btn-primary {
       background-color: #6f42c1;
       border-color: #6f42c1;
     }
+
     .dark-theme .btn-primary:hover {
       background-color: #5a32a3;
       border-color: #5a32a3;
     }
+
     .dark-theme .btn-outline-primary {
       color: #a78bfa;
       border-color: #a78bfa;
     }
+
     .dark-theme .btn-outline-primary:hover {
       background-color: #6f42c1;
       border-color: #6f42c1;
       color: #fff;
     }
+
     .form-control {
       resize: vertical;
     }
+
     .dark-theme .form-control {
       background-color: #495057;
       color: #f8f9fa;
       border-color: #6c757d;
     }
+
     .dark-theme .form-control:focus {
       background-color: #495057;
       color: #f8f9fa;
       border-color: #a78bfa;
-      box-shadow: 0 0 0 .25rem rgba(111,66,193,.25);
+      box-shadow: 0 0 0 .25rem rgba(111, 66, 193, .25);
     }
+
     label {
       font-weight: 500;
     }
+
     .dark-theme label {
       color: #f8f9fa;
     }
+
     .copy-button {
       margin-top: 0.5rem;
     }
+
     .language-switcher,
     .theme-switcher {
       margin-bottom: 1rem;
     }
   </style>
 </head>
+
 <body class="dark-theme">
   <div class="container mt-4">
     <!-- Theme and Language Switchers -->
@@ -125,6 +415,7 @@
         <label for="languageSelect" class="form-label" id="languageLabel">Taal / Language:</label>
         <select id="languageSelect" class="form-control" style="width: auto; display: inline-block;">
           <option value="nl">Nederlands</option>
+          <option value="de">Deutsch</option>
           <option value="en">English</option>
           <option value="es">Español</option>
           <option value="fr">Français</option>
@@ -136,13 +427,16 @@
     <h1 id="pageTitle">Encoder/Decoder</h1>
     <ul class="nav nav-tabs" id="myTab" role="tablist">
       <li class="nav-item" role="presentation">
-        <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Uitleg</button>
+        <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button"
+          role="tab" aria-controls="home" aria-selected="true">Uitleg</button>
       </li>
       <li class="nav-item" role="presentation">
-        <button class="nav-link" id="encode-tab" data-bs-toggle="tab" data-bs-target="#encode" type="button" role="tab" aria-controls="encode" aria-selected="false">Encoder</button>
+        <button class="nav-link" id="encode-tab" data-bs-toggle="tab" data-bs-target="#encode" type="button" role="tab"
+          aria-controls="encode" aria-selected="false">Encoder</button>
       </li>
       <li class="nav-item" role="presentation">
-        <button class="nav-link" id="decode-tab" data-bs-toggle="tab" data-bs-target="#decode" type="button" role="tab" aria-controls="decode" aria-selected="false">Decoder</button>
+        <button class="nav-link" id="decode-tab" data-bs-toggle="tab" data-bs-target="#decode" type="button" role="tab"
+          aria-controls="decode" aria-selected="false">Decoder</button>
       </li>
     </ul>
     <div class="tab-content" id="myTabContent">
@@ -166,35 +460,53 @@
         <div class="mb-3">
           <label for="encodeInput" class="form-label" id="encodeInputLabel">Bericht om te versleutelen</label>
           <textarea class="form-control" id="encodeInput" rows="4" placeholder="Typ hier je bericht..."></textarea>
+          <input type="file" class="form-control mt-2" id="encodeFile" accept="*/*">
+          <small class="form-text text-muted" id="encodeFileHelp">Of upload een bestand (afbeelding, PDF, document, etc.)</small>
         </div>
         <div class="mb-3">
           <label for="encodeKey" class="form-label" id="encodeKeyLabel">Geheime sleutel</label>
           <textarea class="form-control" id="encodeKey" rows="2" placeholder="Typ hier je sleutel..."></textarea>
           <input type="file" class="form-control mt-2" id="encodeKeyFile" accept=".txt">
+          <button class="btn btn-outline-primary mt-2" onclick="generateKeyFile()" id="generateKeyButtonEncode">Genereer sleutelbestand (1000-2000KB)</button>
         </div>
         <button class="btn btn-primary mb-3" onclick="encode()" id="encodeButton">Encode</button>
         <div class="mb-3">
           <label for="encodeOutput" class="form-label" id="encodeOutputLabel">Versleuteld bericht</label>
           <textarea class="form-control" id="encodeOutput" rows="4" readonly></textarea>
-          <button class="btn btn-outline-primary copy-button" onclick="copyText('encodeOutput')" id="copyEncodeButton">Kopiëren</button>
+          <div class="d-flex gap-2">
+            <button class="btn btn-outline-primary copy-button" onclick="copyText('encodeOutput')"
+              id="copyEncodeButton">Kopiëren</button>
+            <button class="btn btn-outline-secondary copy-button" onclick="clearText('encodeOutput')"
+              id="clearEncodeButton">Wissen</button>
+          </div>
         </div>
       </div>
       <div class="tab-pane fade" id="decode" role="tabpanel" aria-labelledby="decode-tab">
         <h2 id="decoderTitle">Decoder</h2>
         <div class="mb-3">
           <label for="decodeInput" class="form-label" id="decodeInputLabel">Versleuteld bericht</label>
-          <textarea class="form-control" id="decodeInput" rows="4" placeholder="Plak hier het versleutelde bericht..."></textarea>
+          <textarea class="form-control" id="decodeInput" rows="4"
+            placeholder="Plak hier het versleutelde bericht..."></textarea>
         </div>
         <div class="mb-3">
           <label for="decodeKey" class="form-label" id="decodeKeyLabel">Geheime sleutel</label>
           <textarea class="form-control" id="decodeKey" rows="2" placeholder="Typ hier je sleutel..."></textarea>
           <input type="file" class="form-control mt-2" id="decodeKeyFile" accept=".txt">
+          <button class="btn btn-outline-primary mt-2" onclick="generateKeyFile()" id="generateKeyButtonDecode">Genereer sleutelbestand (1000-2000KB)</button>
         </div>
         <button class="btn btn-primary mb-3" onclick="decode()" id="decodeButton">Decode</button>
         <div class="mb-3">
           <label for="decodeOutput" class="form-label" id="decodeOutputLabel">Ontsleuteld bericht</label>
           <textarea class="form-control" id="decodeOutput" rows="4" readonly></textarea>
-          <button class="btn btn-outline-primary copy-button" onclick="copyText('decodeOutput')" id="copyDecodeButton">Kopiëren</button>
+          <div id="decodeDownloadSection" style="display: none;">
+            <button class="btn btn-outline-success mt-2" onclick="downloadDecodedFile()" id="downloadDecodeButton">Download bestand</button>
+          </div>
+          <div class="d-flex gap-2 mt-2">
+            <button class="btn btn-outline-primary copy-button" onclick="copyText('decodeOutput')"
+              id="copyDecodeButton">Kopiëren</button>
+            <button class="btn btn-outline-secondary copy-button" onclick="clearText('decodeOutput')"
+              id="clearDecodeButton">Wissen</button>
+          </div>
         </div>
       </div>
     </div>
@@ -256,6 +568,7 @@
         howToUseEncoder: "Hoe gebruik je de Encoder (tweede tabblad)?",
         encoderSteps: [
           "Voer je bericht in: Typ in het eerste veld het bericht dat je wilt versleutelen, bijvoorbeeld: <strong>Dit is een geheim bericht</strong>.",
+          "Of upload een bestand: Je kunt ook een bestand uploaden (afbeelding, PDF, document, etc.) via het bestandsupload veld. Het tekstveld wordt dan automatisch leeggemaakt.",
           "Kies een sleutel: Typ in het tweede veld een geheime sleutel, zoals <strong>mijnsleutel123</strong>. Je kunt ook een tekstbestand uploaden met een langere sleutel, bijvoorbeeld een stukje uit een boek. De sleutel wordt in tweeën gesplitst voor extra beveiliging.",
           "Versleutel het bericht: Klik op de <strong>Encode</strong> knop. Het versleutelde bericht verschijnt in het derde veld. Dit bericht ziet er vreemd uit en kan alleen ontsleuteld worden met de geheim gedeelde string.",
           "Kopieer het resultaat: Klik op de <strong>Kopiëren</strong> knop in het derde veld om het versleutelde bericht te kopiëren en te delen met iemand die de sleutel heeft."
@@ -265,13 +578,16 @@
           "Plak het versleutelde bericht: Plak het versleutelde bericht in het eerste veld van het Decoder-tabblad.",
           "Voer dezelfde sleutel in: Typ of upload dezelfde sleutel die bij het encoderen is gebruikt in het tweede veld.",
           "Ontsleutel het bericht: Klik op de <strong>Decode</strong> knop. Het originele bericht verschijnt in het derde veld, bijvoorbeeld: <strong>Dit is een geheim bericht</strong>.",
+          "Download bestanden: Als je een bestand hebt gecodeerd, verschijnt er een <strong>Download bestand</strong> knop waarmee je het gedecodeerde bestand kunt downloaden met de originele bestandsnaam en extensie.",
           "Kopieer het resultaat: Gebruik de <strong>Kopiëren</strong> knop om het ontsleutelde bericht te kopiëren."
         ],
         whyKey: "Waarom een sleutel?",
-        whyKeyText: "De sleutel is als een wachtwoord. Alleen iemand die dezelfde sleutel heeft, kan het versleutelde bericht weer leesbaar maken. Zonder de sleutel is het bericht onleesbaar. Zorg ervoor dat je de sleutel veilig deelt met de persoon die het bericht moet lezen, bijvoorbeeld via een andere veilige manier zoals een privébericht.",
+        whyKeyText: "De sleutel is als een wachtwoord. Alleen iemand die dezelfde sleutel heeft, kan het versleutelde bericht weer leesbaar maken. Zonder de sleutel is het bericht onleesbaar. Voor maximale veiligheid wordt aangeraden om sleutelbestanden te gebruiken in plaats van korte wachtwoorden. Deel het sleutelbestand veilig via een USB-stick en draai deze HTML lokaal zonder internetverbinding om te garanderen dat niemand mee kan kijken.",
         tips: "Handige tips:",
         tipsList: [
-          "Gebruik een lange of unieke sleutel voor extra veiligheid.",
+          "Gebruik sleutelbestanden (1000-2000KB) in plaats van korte wachtwoorden voor maximale veiligheid.",
+          "Deel sleutelbestanden veilig via USB-stick of andere offline methoden.",
+          "Draai deze HTML lokaal zonder internetverbinding om privacy te garanderen.",
           "Als je een tekstbestand gebruikt als sleutel, zorg ervoor dat beide personen hetzelfde bestand hebben.",
           "Het versleutelde bericht kun je kopiëren en bijvoorbeeld via e-mail of chat sturen.",
           "Als het decoderen niet werkt, controleer of je precies dezelfde sleutel gebruikt als bij het encoderen."
@@ -294,7 +610,82 @@
         encodeAlert: "Vul zowel een bericht als een sleutel in!",
         decodeAlert: "Vul zowel een versleuteld bericht als een sleutel in!",
         decodeError: "Ongeldig versleuteld bericht of verkeerde sleutel!",
-        copyAlert: "Tekst gekopieerd!"
+        copyAlert: "Tekst gekopieerd!",
+        clearButton: "Wissen",
+        generateKeyButton: "Genereer sleutelbestand (1000-2000KB)",
+        generateKeySuccess: "{size}KB sleutelbestand gegenereerd en gedownload!",
+        encodeFileHelp: "Of upload een bestand (afbeelding, PDF, document, etc.)",
+        downloadDecodeButton: "Download bestand",
+        fileUploaded: "Bestand geüpload!",
+        fileTooLarge: "Bestand is te groot (max 10MB)",
+        invalidFile: "Ongeldig bestand"
+      },
+      de: {
+        "switchToLight": "Zum hellen Thema umschalten",
+        "switchToDark": "Zum dunklen Thema umschalten",
+        "languageLabel": "Sprache:",
+        "pageTitle": "Encoder/Decoder",
+        "homeTab": "Erklärung",
+        "encodeTab": "Encoder",
+        "decodeTab": "Decoder",
+        "homeTitle": "Wie funktioniert dieser Encoder/Decoder?",
+        "homeIntro": "Mit dieser Website kannst du geheime Nachrichten erstellen und lesen. Es ist eine einfache Möglichkeit, Text zu verschlüsseln (unlesbar zu machen) und zu entschlüsseln (wieder lesbar zu machen), solange du einen geheimen Schlüssel hast. Hier ist eine einfache Erklärung:",
+        "whatDoesItDo": "Was macht es?",
+        "whatDoesItDoText": "Du kannst eine Nachricht eintippen und mit einem geheimen Schlüssel (einem anderen Text) die Nachricht verschlüsseln. Die verschlüsselte Nachricht sieht aus wie Unsinn, aber jemand mit demselben Schlüssel kann sie wieder lesbar machen. Dies ist nützlich, um Nachrichten zu senden, die nur von Personen mit dem Schlüssel verstanden werden.",
+        "howToUseEncoder": "Wie benutzt man den Encoder (zweites Tab)",
+        "encoderSteps": [
+          "Gib deine Nachricht ein: Tippe im ersten Feld die Nachricht ein, die du verschlüsseln möchtest, z.B.: <strong class=\"strong\">Dies ist eine geheime Nachricht</strong>.",
+          "Oder lade eine Datei hoch: Du kannst auch eine Datei hochladen (Bild, PDF, Dokument, etc.) über das Datei-Upload-Feld. Das Textfeld wird dann automatisch geleert.",
+          "Wähle einen Schlüssel: Gib im zweiten Feld einen geheimen Schlüssel ein, z.B. <strong class=\"strong\">meinsschlüssel123</strong>. Du kannst auch eine Textdatei hochladen mit einem längeren Schlüssel, z.B. ein Stück aus einem Buch. Der Schlüssel wird in zwei Teile aufgeteilt für zusätzliche Sicherheit.",
+          "Verschlüssele die Nachricht: Klicke auf die <strong class=\"strong\">Encode</strong> Schaltfläche. Die verschlüsselte Nachricht erscheint im dritten Feld. Diese Nachricht sieht aus wie Unsinn und kann nur mit der geheim geteilten Zeichenkette entschlüsselt werden.",
+          "Kopiere das Ergebnis: Klicke auf die <strong class=\"strong\">Kopieren</strong> Schaltfläche im dritten Feld, um die verschlüsselte Nachricht zu kopieren und mit jemandem zu teilen, der den Schlüssel hat."
+        ],
+        "howToUseDecoder": "Wie benutzt man den Decoder (drittes Tab)?",
+        "decoderSteps": [
+          "Füge die verschlüsselte Nachricht ein: Füge die verschlüsselte Nachricht im ersten Feld des Decoder-Tabs ein.",
+          "Gib den gleichen Schlüssel ein: Gib oder lade den gleichen Schlüssel ein, der beim Encodieren verwendet wurde, im zweiten Feld ein.",
+          "Entschlüssele die Nachricht: Klicke auf die <strong class=\"strong\">Decode</strong> Schaltfläche. Die ursprüngliche Nachricht erscheint im dritten Feld, z.B. <strong class=\"strong\">Dies ist eine geheime Nachricht</strong>.",
+          "Lade Dateien herunter: Wenn du eine Datei verschlüsselt hast, erscheint eine <strong class=\"strong\">Datei herunterladen</strong> Schaltfläche, mit der du die entschlüsselte Datei mit dem ursprünglichen Dateinamen und der Erweiterung herunterladen kannst.",
+          "Kopiere das Ergebnis: Verwende die <strong class=\"strong\">Kopieren</strong> Schaltfläche, um die entschlüsselte Nachricht zu kopieren."
+        ],
+        "whyKey": "Warum ein Schlüssel?",
+        "whyKeyText": "Der Schlüssel ist wie ein Passwort. Nur jemand mit demselben Schlüssel kann die verschlüsselte Nachricht wieder lesbar machen. Ohne den Schlüssel ist die Nachricht unlesbar. Für maximale Sicherheit wird empfohlen, Schlüsseldateien anstelle kurzer Passwörter zu verwenden. Teile die Schlüsseldatei sicher über einen USB-Stick und führe diese HTML lokal ohne Internetverbindung aus, um zu gewährleisten, dass niemand mitlesen kann.",
+        "tips": "Hilfe Tipps:",
+        "tipsList": [
+          "Verwende Schlüsseldateien (1000-2000KB) anstelle kurzer Passwörter für maximale Sicherheit.",
+          "Teile Schlüsseldateien sicher über USB-Stick oder andere Offline-Methoden.",
+          "Führe diese HTML lokal ohne Internetverbindung aus, um Privatsphäre zu gewährleisten.",
+          "Wenn du eine Textdatei als Schlüssel verwendest, stelle sicher, dass beide Personen dasselbe Dokument haben.",
+          "Die verschlüsselte Nachricht kannst du kopieren und z.B. per E-Mail oder Chat senden.",
+          "Wenn das Entschlüsseln nicht funktioniert, überprüfe, ob du genau denselben Schlüssel wie beim Encodieren verwendet hast."
+        ],
+        "enjoyText": "Viel Spaß beim Senden geheimer Nachrichten!",
+        "encodeInputLabel": "Nachricht zum Verschlüsseln",
+        "encodeKeyLabel": "Geheimer Schlüssel",
+        "encodeButton": "Verschlüsseln",
+        "encodeOutputLabel": "Verschlüsselte Nachricht",
+        "copyEncodeButton": "Kopieren",
+        "decodeInputLabel": "Verschlüsselte Nachricht",
+        "decodeKeyLabel": "Geheimer Schlüssel",
+        "decodeButton": "Entschlüsseln",
+        "decodeOutputLabel": "Entschlüsselte Nachricht",
+        "copyDecodeButton": "Kopieren",
+        "encodeInputPlaceholder": "Hier deine Nachricht eingeben...",
+        "encodeKeyPlaceholder": "Hier deinen Schlüssel eingeben...",
+        "decodeInputPlaceholder": "Verschlüsselte Nachricht hier einfügen...",
+        "decodeKeyPlaceholder": "Hier deinen Schlüssel eingeben...",
+        "encodeAlert": "Bitte gib sowohl eine Nachricht als auch einen Schlüssel ein!",
+        "decodeAlert": "Bitte gib eine verschlüsselte Nachricht und einen Schlüssel ein!",
+        "decodeError": "Ungültige verschlüsselte Nachricht oder falscher Schlüssel!",
+        "copyAlert": "Text kopiert!",
+        "clearButton": "Löschen",
+        "generateKeyButton": "Schlüsseldatei generieren (1000-2000KB)",
+        "generateKeySuccess": "{size}KB Schlüsseldatei generiert und heruntergeladen!",
+        "encodeFileHelp": "Oder eine Datei hochladen (Bild, PDF, Dokument, etc.)",
+        "downloadDecodeButton": "Datei herunterladen",
+        "fileUploaded": "Datei hochgeladen!",
+        "fileTooLarge": "Datei ist zu groß (max 10MB)",
+        "invalidFile": "Ungültige Datei"
       },
       en: {
         switchToLight: "Switch to Light Theme",
@@ -311,6 +702,7 @@
         howToUseEncoder: "How to use the Encoder (second tab)?",
         encoderSteps: [
           "Enter your message: Type the message you want to encrypt in the first field, e.g., <strong>This is a secret message</strong>.",
+          "Or upload a file: You can also upload a file (image, PDF, document, etc.) via the file upload field. The text field will be automatically cleared.",
           "Choose a key: Type a secret key in the second field, such as <strong>mykey123</strong>. You can also upload a text file with a longer key, like a passage from a book. The key is split in two for added security.",
           "Encrypt the message: Click the <strong>Encode</strong> button. The encrypted message appears in the third field. This message looks strange and can only be decrypted with the shared secret string.",
           "Copy the result: Click the <strong>Copy</strong> button in the third field to copy the encrypted message and share it with someone who has the key."
@@ -320,16 +712,19 @@
           "Paste the encrypted message: Paste the encrypted message into the first field of the Decoder tab.",
           "Enter the same key: Type or upload the same key used for encryption in the second field.",
           "Decrypt the message: Click the <strong>Decode</strong> button. The original message appears in the third field, e.g., <strong>This is a secret message</strong>.",
+          "Download files: If you encrypted a file, a <strong>Download file</strong> button will appear allowing you to download the decrypted file with the original filename and extension.",
           "Copy the result: Use the <strong>Copy</strong> button to copy the decrypted message."
         ],
         whyKey: "Why a key?",
-        whyKeyText: "The key is like a password. Only someone with the same key can make the encrypted message readable again. Without the key, the message is unreadable. Make sure to share the key securely with the person who needs to read the message, e.g., via a private message.",
+        whyKeyText: "The key is like a password. Only someone with the same key can make the encrypted message readable again. Without the key, the message is unreadable. For maximum security, it is recommended to use key files instead of short passwords. Share the key file securely via USB stick and run this HTML locally without internet connection to ensure that no one can eavesdrop.",
         tips: "Useful tips:",
         tipsList: [
-          "Use a long or unique key for extra security.",
+          "Use key files (1000-2000KB) instead of short passwords for maximum security.",
+          "Share key files securely via USB stick or other offline methods.",
+          "Run this HTML locally without internet connection to guarantee privacy.",
           "If you use a text file as a key, ensure both parties have the same file.",
           "You can copy the encrypted message and send it via email or chat.",
-          "If decoding doesn’t work, check that you’re using exactly the same key as for encoding."
+          "If decoding doesn't work, check that you're using exactly the same key as for encoding."
         ],
         enjoyText: "Have fun sending secret messages!",
         encodeInputLabel: "Message to encrypt",
@@ -349,7 +744,15 @@
         encodeAlert: "Please enter both a message and a key!",
         decodeAlert: "Please enter both an encrypted message and a key!",
         decodeError: "Invalid encrypted message or wrong key!",
-        copyAlert: "Text copied!"
+        copyAlert: "Text copied!",
+        clearButton: "Clear",
+        generateKeyButton: "Generate key file (1000-2000KB)",
+        generateKeySuccess: "{size}KB key file generated and downloaded!",
+        encodeFileHelp: "Or upload a file (image, PDF, document, etc.)",
+        downloadDecodeButton: "Download file",
+        fileUploaded: "File uploaded!",
+        fileTooLarge: "File is too large (max 10MB)",
+        invalidFile: "Invalid file"
       },
       es: {
         switchToLight: "Cambiar a Tema Claro",
@@ -366,6 +769,7 @@
         howToUseEncoder: "¿Cómo usar el Codificador (segunda pestaña)?",
         encoderSteps: [
           "Ingresa tu mensaje: Escribe el mensaje que deseas cifrar en el primer campo, por ejemplo: <strong>Este es un mensaje secreto</strong>.",
+          "O sube un archivo: También puedes subir un archivo (imagen, PDF, documento, etc.) a través del campo de carga de archivos. El campo de texto se borrará automáticamente.",
           "Elige una clave: Escribe una clave secreta en el segundo campo, como <strong>miclave123</strong>. También puedes cargar un archivo de texto con una clave más larga, como un pasaje de un libro. La clave se divide en dos para mayor seguridad.",
           "Cifrar el mensaje: Haz clic en el botón <strong>Codificar</strong>. El mensaje cifrado aparece en el tercer campo. Este mensaje parece extraño y solo puede descifrarse con la cadena secreta compartida.",
           "Copiar el resultado: Haz clic en el botón <strong>Copiar</strong> en el tercer campo para copiar el mensaje cifrado y compartirlo con alguien que tenga la clave."
@@ -375,13 +779,16 @@
           "Pega el mensaje cifrado: Pega el mensaje cifrado en el primer campo de la pestaña Decodificador.",
           "Ingresa la misma clave: Escribe o carga la misma clave utilizada para el cifrado en el segundo campo.",
           "Descifrar el mensaje: Haz clic en el botón <strong>Decodificar</strong>. El mensaje original aparecerá en el tercer campo, por ejemplo: <strong>Este es un mensaje secreto</strong>.",
+          "Descargar archivos: Si cifraste un archivo, aparecerá un botón <strong>Descargar archivo</strong> que te permitirá descargar el archivo descifrado con el nombre y extensión originales.",
           "Copiar el resultado: Usa el botón <strong>Copiar</strong> para copiar el mensaje descifrado."
         ],
         whyKey: "¿Por qué una clave?",
-        whyKeyText: "La clave es como una contraseña. Solo alguien con la misma clave puede hacer que el mensaje cifrado sea legible nuevamente. Sin la clave, el mensaje es ilegible. Asegúrate de compartir la clave de forma segura con la persona que necesita leer el mensaje, por ejemplo, a través de un mensaje privado.",
+        whyKeyText: "La clave es como una contraseña. Solo alguien con la misma clave puede hacer que el mensaje cifrado sea legible nuevamente. Sin la clave, el mensaje es ilegible. Para máxima seguridad, se recomienda usar archivos de clave en lugar de contraseñas cortas. Comparte el archivo de clave de forma segura a través de una memoria USB y ejecuta este HTML localmente sin conexión a Internet para garantizar que nadie pueda espiar.",
         tips: "Consejos útiles:",
         tipsList: [
-          "Usa una clave larga o única para mayor seguridad.",
+          "Usa archivos de clave (1000-2000KB) en lugar de contraseñas cortas para máxima seguridad.",
+          "Comparte archivos de clave de forma segura a través de memoria USB u otros métodos sin conexión.",
+          "Ejecuta este HTML localmente sin conexión a Internet para garantizar la privacidad.",
           "Si usas un archivo de texto como clave, asegúrate de que ambas partes tengan el mismo archivo.",
           "Puedes copiar el mensaje cifrado y enviarlo por correo electrónico o chat.",
           "Si el descifrado no funciona, verifica que estés usando exactamente la misma clave que para el cifrado."
@@ -404,7 +811,15 @@
         encodeAlert: "¡Por favor, introduce tanto un mensaje como una clave!",
         decodeAlert: "¡Por favor, introduce tanto un mensaje cifrado como una clave!",
         decodeError: "¡Mensaje cifrado inválido o clave incorrecta!",
-        copyAlert: "¡Texto copiado!"
+        copyAlert: "¡Texto copiado!",
+        clearButton: "Limpiar",
+        generateKeyButton: "Generar archivo de clave (1000-2000KB)",
+        generateKeySuccess: "¡Archivo de clave de {size}KB generado y descargado!",
+        encodeFileHelp: "O subir un archivo (imagen, PDF, documento, etc.)",
+        downloadDecodeButton: "Descargar archivo",
+        fileUploaded: "¡Archivo subido!",
+        fileTooLarge: "El archivo es demasiado grande (máx. 10MB)",
+        invalidFile: "Archivo no válido"
       },
       fr: {
         switchToLight: "Passer au thème clair",
@@ -421,6 +836,7 @@
         howToUseEncoder: "Comment utiliser l'Encodeur (deuxième onglet) ?",
         encoderSteps: [
           "Entrez votre message : Tapez le message que vous souhaitez chiffrer dans le premier champ, par exemple : <strong>Ceci est un message secret</strong>.",
+          "Ou téléchargez un fichier : Vous pouvez également télécharger un fichier (image, PDF, document, etc.) via le champ de téléchargement de fichiers. Le champ de texte sera automatiquement effacé.",
           "Choisissez une clé : Tapez une clé secrète dans le deuxième champ, comme <strong>maclé123</strong>. Vous pouvez également télécharger un fichier texte avec une clé plus longue, comme un passage d'un livre. La clé est divisée en deux pour plus de sécurité.",
           "Chiffrer le message : Cliquez sur le bouton <strong>Encoder</strong>. Le message chiffré apparaît dans le troisième champ. Ce message semble étrange et ne peut être déchiffré qu'avec la chaîne secrète partagée.",
           "Copier le résultat : Cliquez sur le bouton <strong>Copier</strong> dans le troisième champ pour copier le message chiffré et le partager avec quelqu'un qui a la clé."
@@ -430,13 +846,16 @@
           "Coller le message chiffré : Collez le message chiffré dans le premier champ de l'onglet Décodeur.",
           "Entrez la même clé : Tapez ou téléchargez la même clé utilisée pour le chiffrement dans le deuxième champ.",
           "Déchiffrer le message : Cliquez sur le bouton <strong>Décoder</strong>. Le message original apparaît dans le troisième champ, par exemple : <strong>Ceci est un message secret</strong>.",
+          "Télécharger les fichiers : Si vous avez chiffré un fichier, un bouton <strong>Télécharger le fichier</strong> apparaîtra vous permettant de télécharger le fichier déchiffré avec le nom et l'extension d'origine.",
           "Copier le résultat : Utilisez le bouton <strong>Copier</strong> pour copier le message déchiffré."
         ],
         whyKey: "Pourquoi une clé ?",
-        whyKeyText: "La clé est comme un mot de passe. Seule une personne ayant la même clé peut rendre le message chiffré lisible à nouveau. Sans la clé, le message est illisible. Assurez-vous de partager la clé de manière sécurisée avec la personne qui doit lire le message, par exemple via un message privé.",
+        whyKeyText: "La clé est comme un mot de passe. Seule une personne ayant la même clé peut rendre le message chiffré lisible à nouveau. Sans la clé, le message est illisible. Pour une sécurité maximale, il est recommandé d'utiliser des fichiers de clé au lieu de mots de passe courts. Partagez le fichier de clé en toute sécurité via une clé USB et exécutez ce HTML localement sans connexion Internet pour garantir que personne ne puisse espionner.",
         tips: "Conseils utiles :",
         tipsList: [
-          "Utilisez une clé longue ou unique pour plus de sécurité.",
+          "Utilisez des fichiers de clé (1000-2000KB) au lieu de mots de passe courts pour une sécurité maximale.",
+          "Partagez les fichiers de clé en toute sécurité via une clé USB ou d'autres méthodes hors ligne.",
+          "Exécutez ce HTML localement sans connexion Internet pour garantir la confidentialité.",
           "Si vous utilisez un fichier texte comme clé, assurez-vous que les deux parties ont le même fichier.",
           "Vous pouvez copier le message chiffré et l'envoyer par e-mail ou chat.",
           "Si le déchiffrement ne fonctionne pas, vérifiez que vous utilisez exactement la même clé que pour le chiffrement."
@@ -459,7 +878,15 @@
         encodeAlert: "Veuillez entrer à la fois un message et une clé !",
         decodeAlert: "Veuillez entrer à la fois un message chiffré et une clé !",
         decodeError: "Message chiffré invalide ou clé incorrecte !",
-        copyAlert: "Texte copié !"
+        copyAlert: "Texte copié !",
+        clearButton: "Effacer",
+        generateKeyButton: "Générer un fichier clé (1000-2000KB)",
+        generateKeySuccess: "Fichier clé de {size}KB généré et téléchargé !",
+        encodeFileHelp: "Ou télécharger un fichier (image, PDF, document, etc.)",
+        downloadDecodeButton: "Télécharger le fichier",
+        fileUploaded: "Fichier téléchargé !",
+        fileTooLarge: "Le fichier est trop grand (max 10MB)",
+        invalidFile: "Fichier non valide"
       },
       ru: {
         switchToLight: "Переключиться на светлую тему",
@@ -476,6 +903,7 @@
         howToUseEncoder: "Как использовать Кодировщик (вторая вкладка)?",
         encoderSteps: [
           "Введите ваше сообщение: Введите сообщение, которое вы хотите зашифровать, в первое поле, например: <strong>Это секретное сообщение</strong>.",
+          "Или загрузите файл: Вы также можете загрузить файл (изображение, PDF, документ, etc.) через поле загрузки файлов. Текстовое поле будет автоматически очищено.",
           "Выберите ключ: Введите секретный ключ во второе поле, например, <strong>мойключ123</strong>. Вы также можете загрузить текстовый файл с более длинным ключом, например, отрывок из книги. Ключ делится на две части для дополнительной безопасности.",
           "Зашифруйте сообщение: Нажмите кнопку <strong>Кодировать</strong>. Зашифрованное сообщение появится в третьем поле. Это сообщение выглядит странно и может быть расшифровано только с помощью общей секретной строки.",
           "Скопируйте результат: Нажмите кнопку <strong>Копировать</strong> в третьем поле, чтобы скопировать зашифрованное сообщение и поделиться им с тем, у кого есть ключ."
@@ -485,13 +913,16 @@
           "Вставьте зашифрованное сообщение: Вставьте зашифрованное сообщение в первое поле вкладки Декодировщик.",
           "Введите тот же ключ: Введите или загрузите тот же ключ, который использовался для шифрования, во второе поле.",
           "Расшифруйте сообщение: Нажмите кнопку <strong>Декодировать</strong>. Исходное сообщение появится в третьем поле, например: <strong>Это секретное сообщение</strong>.",
+          "Скачайте файлы: Если вы зашифровали файл, появится кнопка <strong>Скачать файл</strong>, позволяющая скачать расшифрованный файл с оригинальным именем и расширением.",
           "Скопируйте результат: Используйте кнопку <strong>Копировать</strong>, чтобы скопировать расшифрованное сообщение."
         ],
         whyKey: "Зачем нужен ключ?",
-        whyKeyText: "Ключ — это как пароль. Только тот, у кого есть такой же ключ, может сделать зашифрованное сообщение читаемым снова. Без ключа сообщение нечитаемо. Убедитесь, что вы безопасно делитесь ключом с человеком, который должен прочитать сообщение, например, через личное сообщение.",
+        whyKeyText: "Ключ — это как пароль. Только тот, у кого есть такой же ключ, может сделать зашифрованное сообщение читаемым снова. Без ключа сообщение нечитаемо. Для максимальной безопасности рекомендуется использовать файлы ключей вместо коротких паролей. Делитесь файлом ключа безопасно через USB-накопитель и запускайте этот HTML локально без подключения к Интернету, чтобы гарантировать, что никто не сможет подслушать.",
         tips: "Полезные советы:",
         tipsList: [
-          "Используйте длинный или уникальный ключ для дополнительной безопасности.",
+          "Используйте файлы ключей (1000-2000KB) вместо коротких паролей для максимальной безопасности.",
+          "Делитесь файлами ключей безопасно через USB-накопитель или другие офлайн-методы.",
+          "Запускайте этот HTML локально без подключения к Интернету, чтобы гарантировать конфиденциальность.",
           "Если вы используете текстовый файл в качестве ключа, убедитесь, что у обеих сторон есть одинаковый файл.",
           "Вы можете скопировать зашифрованное сообщение и отправить его по электронной почте или в чате.",
           "Если декодирование не работает, проверьте, используете ли вы точно такой же ключ, как для шифрования."
@@ -514,7 +945,15 @@
         encodeAlert: "Пожалуйста, введите и сообщение, и ключ!",
         decodeAlert: "Пожалуйста, введите и зашифрованное сообщение, и ключ!",
         decodeError: "Недействительное зашифрованное сообщение или неверный ключ!",
-        copyAlert: "Текст скопирован!"
+        copyAlert: "Текст скопирован!",
+        clearButton: "Очистить",
+        generateKeyButton: "Сгенерировать файл ключа (1000-2000KB)",
+        generateKeySuccess: "Файл ключа {size}KB сгенерирован и загружен!",
+        encodeFileHelp: "Или загрузить файл (изображение, PDF, документ, etc.)",
+        downloadDecodeButton: "Скачать файл",
+        fileUploaded: "Файл загружен!",
+        fileTooLarge: "Файл слишком большой (макс. 10MB)",
+        invalidFile: "Неверный файл"
       },
       zh: {
         switchToLight: "切换到浅色主题",
@@ -531,6 +970,7 @@
         howToUseEncoder: "如何使用加密器（第二个标签）？",
         encoderSteps: [
           "输入你的消息：在第一个字段中输入你想加密的消息，例如：<strong>这是一个秘密消息</strong>。",
+          "或上传文件：你也可以通过文件上传字段上传文件（图片、PDF、文档等）。文本字段将自动清空。",
           "选择一个密钥：在第二个字段中输入一个秘密密钥，如<strong>mykey123</strong>。你也可以上传一个包含更长密钥的文本文件，例如一本书的片段。密钥会被分成两部分以增加安全性。",
           "加密消息：点击<strong>加密</strong>按钮。加密后的消息将出现在第三个字段中。这个消息看起来很奇怪，只能使用共享的秘密字符串解密。",
           "复制结果：点击第三个字段中的<strong>复制</strong>按钮，以复制加密后的消息并与拥有密钥的人分享。"
@@ -540,13 +980,16 @@
           "粘贴加密消息：将加密消息粘贴到解密器标签的第一个字段中。",
           "输入相同的密钥：在第二个字段中输入或上传用于加密的相同密钥。",
           "解密消息：点击<strong>解密</strong>按钮。原始消息将出现在第三个字段中，例如：<strong>这是一个秘密消息</strong>。",
+          "下载文件：如果你加密了一个文件，会出现一个<strong>下载文件</strong>按钮，允许你下载解密后的文件，包含原始文件名和扩展名。",
           "复制结果：使用<strong>复制</strong>按钮复制解密后的消息。"
         ],
         whyKey: "为什么需要密钥？",
-        whyKeyText: "密钥就像一个密码。只有拥有相同密钥的人才能使加密消息再次可读。没有密钥，消息是不可读的。确保以安全的方式与需要阅读消息的人分享密钥，例如通过私人消息。",
+        whyKeyText: "密钥就像一个密码。只有拥有相同密钥的人才能使加密消息再次可读。没有密钥，消息是不可读的。为了最大安全性，建议使用密钥文件而不是短密码。通过USB安全地共享密钥文件，并在没有互联网连接的情况下本地运行此HTML，以确保没有人可以窃听。",
         tips: "实用提示：",
         tipsList: [
-          "使用长或独特的密钥以增加安全性。",
+          "使用密钥文件（1000-2000KB）而不是短密码以获得最大安全性。",
+          "通过USB或其他离线方法安全地共享密钥文件。",
+          "在没有互联网连接的情况下本地运行此HTML以保证隐私。",
           "如果使用文本文件作为密钥，确保双方拥有相同的文件。",
           "你可以复制加密消息并通过电子邮件或聊天发送。",
           "如果解密失败，请检查是否使用了与加密时完全相同的密钥。"
@@ -569,7 +1012,15 @@
         encodeAlert: "请同时输入消息和密钥！",
         decodeAlert: "请同时输入加密消息和密钥！",
         decodeError: "无效的加密消息或错误的密钥！",
-        copyAlert: "文本已复制！"
+        copyAlert: "文本已复制！",
+        clearButton: "清除",
+        generateKeyButton: "生成密钥文件 (1000-2000KB)",
+        generateKeySuccess: "{size}KB密钥文件已生成并下载！",
+        encodeFileHelp: "或上传文件（图片、PDF、文档等）",
+        downloadDecodeButton: "下载文件",
+        fileUploaded: "文件已上传！",
+        fileTooLarge: "文件太大（最大10MB）",
+        invalidFile: "无效文件"
       }
     };
 
@@ -577,8 +1028,8 @@
     const themeToggle = document.getElementById('themeToggle');
     function setTheme(theme) {
       document.body.className = theme + '-theme';
-      themeToggle.textContent = theme === 'dark' ? 
-        translations[document.getElementById('languageSelect').value].switchToLight : 
+      themeToggle.textContent = theme === 'dark' ?
+        translations[document.getElementById('languageSelect').value].switchToLight :
         translations[document.getElementById('languageSelect').value].switchToDark;
       localStorage.setItem('theme', theme);
     }
@@ -618,11 +1069,28 @@
       document.getElementById('decodeButton').textContent = translations[lang].decodeButton;
       document.getElementById('decodeOutputLabel').textContent = translations[lang].decodeOutputLabel;
       document.getElementById('copyDecodeButton').textContent = translations[lang].copyDecodeButton;
+      document.getElementById('clearEncodeButton').textContent = translations[lang].clearButton || 'Wissen';
+      document.getElementById('clearDecodeButton').textContent = translations[lang].clearButton || 'Wissen';
       document.getElementById('encodeInput').placeholder = translations[lang].encodeInputPlaceholder;
       document.getElementById('encodeKey').placeholder = translations[lang].encodeKeyPlaceholder;
       document.getElementById('decodeInput').placeholder = translations[lang].decodeInputPlaceholder;
       document.getElementById('decodeKey').placeholder = translations[lang].decodeKeyPlaceholder;
-      themeToggle.textContent = document.body.classList.contains('dark-theme') ? 
+      
+      // Update generate key button text
+      const generateKeyButtonEncode = document.getElementById('generateKeyButtonEncode');
+      const generateKeyButtonDecode = document.getElementById('generateKeyButtonDecode');
+      if (generateKeyButtonEncode) generateKeyButtonEncode.textContent = translations[lang].generateKeyButton;
+      if (generateKeyButtonDecode) generateKeyButtonDecode.textContent = translations[lang].generateKeyButton;
+      
+      // Update file help text
+      const encodeFileHelp = document.getElementById('encodeFileHelp');
+      if (encodeFileHelp) encodeFileHelp.textContent = translations[lang].encodeFileHelp;
+      
+      // Update download button text
+      const downloadDecodeButton = document.getElementById('downloadDecodeButton');
+      if (downloadDecodeButton) downloadDecodeButton.textContent = translations[lang].downloadDecodeButton;
+      
+      themeToggle.textContent = document.body.classList.contains('dark-theme') ?
         translations[lang].switchToLight : translations[lang].switchToDark;
 
       // Update lists
@@ -657,39 +1125,334 @@
     updateLanguage(selectedLang);
 
     // Language Switcher
-    document.getElementById('languageSelect').addEventListener('change', function() {
+    document.getElementById('languageSelect').addEventListener('change', function () {
       updateLanguage(this.value);
     });
+
+    // Global variables for file handling
+    let uploadedFileData = null;
+    let uploadedFileType = null;
+    let uploadedFileName = null;
+    let decodedFileData = null;
+    let decodedFileType = null;
+    let decodedFileName = null;
 
     // Encoder/Decoder Functions
     function encode() {
       const input = document.getElementById('encodeInput').value;
       const key = document.getElementById('encodeKey').value;
       const output = document.getElementById('encodeOutput');
-      if (!input || !key) {
-        alert(translations[document.getElementById('languageSelect').value].encodeAlert);
-        return;
+      
+      // Check if we have an uploaded file
+      if (uploadedFileData) {
+        if (!key) {
+          alert(translations[document.getElementById('languageSelect').value].encodeAlert);
+          return;
+        }
+        
+        try {
+          // Encrypt the file data
+          const fileBytes = new Uint8Array(uploadedFileData);
+          const keyBytes = new TextEncoder().encode(key);
+          const keyLength = keyBytes.length;
+          
+          // Use for loop instead of map to avoid call stack issues with large arrays
+          const xorBytes = new Uint8Array(fileBytes.length);
+          for (let i = 0; i < fileBytes.length; i++) {
+            xorBytes[i] = fileBytes[i] ^ keyBytes[i % keyLength];
+          }
+          
+          // Convert encrypted bytes to Base64 using more efficient method
+          let xorString = '';
+          for (let i = 0; i < xorBytes.length; i++) {
+            xorString += String.fromCharCode(xorBytes[i]);
+          }
+          const encoded = btoa(xorString);
+          
+          // Package as JSON with file type information and encrypt the entire package
+          const package = {
+            type: 'file',
+            fileType: uploadedFileType,
+            fileName: uploadedFileName,
+            data: encoded
+          };
+          const packageString = JSON.stringify(package);
+          
+          // Encrypt the JSON package
+          const packageBytes = new TextEncoder().encode(packageString);
+          const packageXorBytes = new Uint8Array(packageBytes.length);
+          for (let i = 0; i < packageBytes.length; i++) {
+            packageXorBytes[i] = packageBytes[i] ^ keyBytes[i % keyLength];
+          }
+          
+          // Convert encrypted package to Base64
+          let packageXorString = '';
+          for (let i = 0; i < packageXorBytes.length; i++) {
+            packageXorString += String.fromCharCode(packageXorBytes[i]);
+          }
+          const finalEncoded = btoa(packageXorString);
+          output.value = finalEncoded;
+        } catch (e) {
+          alert("Image encoding error: " + e.message);
+        }
+      } else {
+        // Original text encoding
+        if (!input || !key) {
+          alert(translations[document.getElementById('languageSelect').value].encodeAlert);
+          return;
+        }
+        
+        // Strip only leading/trailing whitespace, preserve internal formatting
+        const cleanInput = input.trim();
+        
+        try {
+          // Convert string to UTF-8 bytes first, then apply XOR, then Base64
+          const utf8Bytes = new TextEncoder().encode(cleanInput);
+          const keyBytes = new TextEncoder().encode(key);
+          const keyLength = keyBytes.length;
+          
+          // Use for loop instead of map for consistency
+          const xorBytes = new Uint8Array(utf8Bytes.length);
+          for (let i = 0; i < utf8Bytes.length; i++) {
+            xorBytes[i] = utf8Bytes[i] ^ keyBytes[i % keyLength];
+          }
+          
+          // Convert bytes to string for Base64 encoding using more efficient method
+          let xorString = '';
+          for (let i = 0; i < xorBytes.length; i++) {
+            xorString += String.fromCharCode(xorBytes[i]);
+          }
+          const encoded = btoa(xorString);
+          output.value = encoded;
+        } catch (e) {
+          alert("Encoding error: " + e.message);
+        }
       }
-      const encoded = btoa(input.split('').map((c, i) => 
-        String.fromCharCode(c.charCodeAt(0) ^ key.charCodeAt(i % key.length))).join(''));
-      output.value = encoded;
     }
 
     function decode() {
       const input = document.getElementById('decodeInput').value;
       const key = document.getElementById('decodeKey').value;
       const output = document.getElementById('decodeOutput');
+      const downloadSection = document.getElementById('decodeDownloadSection');
+      
       if (!input || !key) {
         alert(translations[document.getElementById('languageSelect').value].decodeAlert);
         return;
       }
+      
       try {
-        const decoded = atob(input).split('').map((c, i) => 
-          String.fromCharCode(c.charCodeAt(0) ^ key.charCodeAt(i % key.length))).join('');
-        output.value = decoded;
+        // Try to parse as JSON package first
+        let packageData;
+        try {
+          packageData = JSON.parse(input);
+        } catch (e) {
+          // Not JSON, treat as legacy text encoding
+          packageData = null;
+        }
+        
+        if (packageData && packageData.type === 'file') {
+          // Handle file package - show JSON in output and enable download
+          output.value = JSON.stringify(packageData, null, 2);
+          
+          // Decrypt the file data for download
+          const encodedData = packageData.data;
+          const xorString = atob(encodedData);
+          const xorBytes = new Uint8Array(xorString.length);
+          for (let i = 0; i < xorString.length; i++) {
+            xorBytes[i] = xorString.charCodeAt(i);
+          }
+          
+          const keyBytes = new TextEncoder().encode(key);
+          const keyLength = keyBytes.length;
+          const decodedBytes = new Uint8Array(xorBytes.length);
+          for (let i = 0; i < xorBytes.length; i++) {
+            decodedBytes[i] = xorBytes[i] ^ keyBytes[i % keyLength];
+          }
+          
+          // Store the decoded file data and type for download
+          decodedFileData = decodedBytes;
+          decodedFileType = packageData.fileType;
+          decodedFileName = packageData.fileName || 'decoded_file';
+          downloadSection.style.display = 'block';
+        } else {
+          // This is the new encrypted format - try to decrypt as JSON package
+          const cleanInput = input.trim();
+          const xorString = atob(cleanInput);
+          const xorBytes = new Uint8Array(xorString.length);
+          for (let i = 0; i < xorString.length; i++) {
+            xorBytes[i] = xorString.charCodeAt(i);
+          }
+          
+          const keyBytes = new TextEncoder().encode(key);
+          const keyLength = keyBytes.length;
+          const decodedBytes = new Uint8Array(xorBytes.length);
+          for (let i = 0; i < xorBytes.length; i++) {
+            decodedBytes[i] = xorBytes[i] ^ keyBytes[i % keyLength];
+          }
+          
+          // Try to parse as JSON package
+          try {
+            const decodedString = new TextDecoder().decode(decodedBytes);
+            const potentialPackage = JSON.parse(decodedString);
+            
+            if (potentialPackage && potentialPackage.type === 'file') {
+              // This is a file package - show info and enable download
+              output.value = "Bestand gedecodeerd. Klik op 'Download bestand' om het bestand te downloaden.";
+              
+              // Decrypt the actual file data
+              const fileEncodedData = potentialPackage.data;
+              const fileXorString = atob(fileEncodedData);
+              const fileXorBytes = new Uint8Array(fileXorString.length);
+              for (let i = 0; i < fileXorString.length; i++) {
+                fileXorBytes[i] = fileXorString.charCodeAt(i);
+              }
+              
+              const fileDecodedBytes = new Uint8Array(fileXorBytes.length);
+              for (let i = 0; i < fileXorBytes.length; i++) {
+                fileDecodedBytes[i] = fileXorBytes[i] ^ keyBytes[i % keyLength];
+              }
+              
+              // Store the decoded file data and type for download
+              decodedFileData = fileDecodedBytes;
+              decodedFileType = potentialPackage.fileType;
+              decodedFileName = potentialPackage.fileName || 'decoded_file';
+              downloadSection.style.display = 'block';
+            } else {
+              // It's regular text
+              output.value = decodedString;
+              downloadSection.style.display = 'none';
+              decodedFileData = null;
+              decodedFileType = null;
+              decodedFileName = null;
+            }
+          } catch (jsonError) {
+            // Not JSON, check if it's an image or regular text
+            const firstBytes = decodedBytes.slice(0, 4);
+            const isImage = isImageData(firstBytes);
+            
+            if (isImage) {
+              // Store the decoded image data for download (legacy format)
+              decodedFileData = decodedBytes;
+              decodedFileType = getImageTypeFromBytes(firstBytes);
+              decodedFileName = 'decoded_image';
+              output.value = "Afbeelding gedecodeerd. Klik op 'Download bestand' om de afbeelding te downloaden.";
+              downloadSection.style.display = 'block';
+            } else {
+              // It's text
+              const decoded = new TextDecoder().decode(decodedBytes);
+              output.value = decoded;
+              downloadSection.style.display = 'none';
+              decodedFileData = null;
+              decodedFileType = null;
+              decodedFileName = null;
+            }
+          }
+        }
       } catch (e) {
-        alert(translations[document.getElementById('languageSelect').value].decodeError);
+        alert(translations[document.getElementById('languageSelect').value].decodeError + " Error: " + e.message);
       }
+    }
+    
+    function getImageTypeFromBytes(bytes) {
+      // Determine image type from file signature
+      if (bytes[0] === 0xFF && bytes[1] === 0xD8) return 'image/jpeg';
+      if (bytes[0] === 0x89 && bytes[1] === 0x50 && bytes[2] === 0x4E && bytes[3] === 0x47) return 'image/png';
+      if (bytes[0] === 0x47 && bytes[1] === 0x49 && bytes[2] === 0x46 && bytes[3] === 0x38) return 'image/gif';
+      if (bytes[0] === 0x42 && bytes[1] === 0x4D) return 'image/bmp';
+      if (bytes[0] === 0x52 && bytes[1] === 0x49 && bytes[2] === 0x46 && bytes[3] === 0x46) return 'image/webp';
+      return 'image/jpeg'; // default fallback
+    }
+    
+    function isImageData(bytes) {
+      // Check for common image file signatures
+      const signatures = [
+        [0xFF, 0xD8, 0xFF, 0xE0], // JPEG
+        [0xFF, 0xD8, 0xFF, 0xE1], // JPEG
+        [0x89, 0x50, 0x4E, 0x47], // PNG
+        [0x47, 0x49, 0x46, 0x38], // GIF
+        [0x42, 0x4D, 0x00, 0x00], // BMP
+        [0x52, 0x49, 0x46, 0x46]  // WEBP
+      ];
+      
+      return signatures.some(sig =>
+        sig.every((byte, index) => bytes[index] === byte)
+      );
+    }
+    
+    function downloadDecodedFile() {
+      if (!decodedFileData) {
+        alert("Geen gedecodeerd bestand beschikbaar om te downloaden.");
+        return;
+      }
+      
+      try {
+        // Determine file extension from MIME type
+        let extension = getFileExtension(decodedFileType);
+        let fileName = decodedFileName || 'decoded_file';
+        
+        const blob = new Blob([decodedFileData], { type: decodedFileType || 'application/octet-stream' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName + '.' + extension;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      } catch (e) {
+        alert("Fout bij downloaden: " + e.message);
+      }
+    }
+    
+    function getFileExtension(mimeType) {
+      const extensionMap = {
+        // Images
+        'image/jpeg': 'jpg',
+        'image/jpg': 'jpg',
+        'image/png': 'png',
+        'image/gif': 'gif',
+        'image/bmp': 'bmp',
+        'image/webp': 'webp',
+        'image/svg+xml': 'svg',
+        'image/tiff': 'tiff',
+        
+        // Documents
+        'application/pdf': 'pdf',
+        'application/msword': 'doc',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'docx',
+        'application/vnd.ms-excel': 'xls',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': 'xlsx',
+        'application/vnd.ms-powerpoint': 'ppt',
+        'application/vnd.openxmlformats-officedocument.presentationml.presentation': 'pptx',
+        'text/plain': 'txt',
+        'text/csv': 'csv',
+        'application/rtf': 'rtf',
+        
+        // Archives
+        'application/zip': 'zip',
+        'application/x-rar-compressed': 'rar',
+        'application/x-7z-compressed': '7z',
+        'application/x-tar': 'tar',
+        'application/gzip': 'gz',
+        
+        // Audio
+        'audio/mpeg': 'mp3',
+        'audio/wav': 'wav',
+        'audio/ogg': 'ogg',
+        'audio/aac': 'aac',
+        'audio/flac': 'flac',
+        
+        // Video
+        'video/mp4': 'mp4',
+        'video/mpeg': 'mpeg',
+        'video/ogg': 'ogv',
+        'video/webm': 'webm',
+        'video/x-msvideo': 'avi',
+        'video/quicktime': 'mov'
+      };
+      
+      return extensionMap[mimeType] || 'dat';
     }
 
     function copyText(elementId) {
@@ -699,27 +1462,106 @@
       alert(translations[document.getElementById('languageSelect').value].copyAlert);
     }
 
-    document.getElementById('encodeKeyFile').addEventListener('change', function(e) {
+    function clearText(elementId) {
+      const textarea = document.getElementById(elementId);
+      textarea.value = '';
+    }
+
+    document.getElementById('encodeKeyFile').addEventListener('change', function (e) {
       const file = e.target.files[0];
       if (file) {
         const reader = new FileReader();
-        reader.onload = function(e) {
+        reader.onload = function (e) {
           document.getElementById('encodeKey').value = e.target.result;
         };
         reader.readAsText(file);
       }
     });
 
-    document.getElementById('decodeKeyFile').addEventListener('change', function(e) {
+    document.getElementById('decodeKeyFile').addEventListener('change', function (e) {
       const file = e.target.files[0];
       if (file) {
         const reader = new FileReader();
-        reader.onload = function(e) {
+        reader.onload = function (e) {
           document.getElementById('decodeKey').value = e.target.result;
         };
         reader.readAsText(file);
       }
     });
+    
+    // File upload handler
+    document.getElementById('encodeFile').addEventListener('change', function (e) {
+      const file = e.target.files[0];
+      if (file) {
+        // Check file size (max 10MB)
+        if (file.size > 10 * 1024 * 1024) {
+          alert(translations[document.getElementById('languageSelect').value].fileTooLarge);
+          this.value = '';
+          return;
+        }
+        
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          try {
+            // Convert ArrayBuffer to Uint8Array
+            const arrayBuffer = e.target.result;
+            uploadedFileData = new Uint8Array(arrayBuffer);
+            uploadedFileType = file.type;
+            uploadedFileName = file.name.split('.').slice(0, -1).join('.') || 'file';
+            
+            // Clear text input and show success message
+            document.getElementById('encodeInput').value = '';
+            alert(translations[document.getElementById('languageSelect').value].fileUploaded);
+          } catch (error) {
+            alert("Error reading file: " + error.message);
+            this.value = '';
+          }
+        };
+        reader.onerror = function () {
+          alert("Error reading file");
+          this.value = '';
+        };
+        reader.readAsArrayBuffer(file);
+      }
+    });
+
+    // Generate random size key file function (1000KB-2000KB)
+    function generateKeyFile() {
+      try {
+        // Generate random file size between 1000KB and 2000KB
+        const minSize = 1000 * 1024; // 1000KB in bytes
+        const maxSize = 2000 * 1024; // 2000KB in bytes
+        const fileSize = Math.floor(Math.random() * (maxSize - minSize + 1)) + minSize;
+        
+        let randomContent = '';
+        
+        // Generate random ASCII characters (32-126)
+        for (let i = 0; i < fileSize; i++) {
+          randomContent += String.fromCharCode(Math.floor(Math.random() * 95) + 32);
+        }
+        
+        // Create blob and download link
+        const blob = new Blob([randomContent], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'random_key_' + Math.round(fileSize / 1024) + 'kb.txt';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        // Show success message with actual file size
+        const currentLang = document.getElementById('languageSelect').value;
+        const fileSizeKB = Math.round(fileSize / 1024);
+        const message = (translations[currentLang].generateKeySuccess || 'Key file generated successfully!')
+          .replace('1000KB', fileSizeKB + 'KB');
+        alert(message);
+      } catch (e) {
+        alert('Error generating key file: ' + e.message);
+      }
+    }
   </script>
 </body>
+
 </html>
